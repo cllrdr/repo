@@ -1,0 +1,25 @@
+root@aach-pc:~/ans# ansible-playbook -i inventory playbook.yml 
+
+PLAY [osboxes] *************************************************************************************
+
+TASK [adding jenkins.repo and  import GPG key] *****************************************************
+changed: [osboxes] => (item=sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo)
+changed: [osboxes] => (item=sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io-2023.key)
+
+TASK [install java] ********************************************************************************
+ok: [osboxes]
+
+TASK [install jenkins] *****************************************************************************
+ok: [osboxes]
+
+TASK [jenkins status] ******************************************************************************
+fatal: [osboxes]: FAILED! => {"changed": true, "cmd": "systemctl status jenkins", "delta": "0:00:00.007194", "end": "2024-09-08 06:52:16.436668", "msg": "non-zero return code", "rc": 3, "start": "2024-09-08 06:52:16.429474", "stderr": "", "stderr_lines": [], "stdout": "● jenkins.service - Jenkins Continuous Integration Server\n   Loaded: loaded (/usr/lib/systemd/system/jenkins.service; disabled; vendor preset: disabled)\n   Active: inactive (dead)", "stdout_lines": ["● jenkins.service - Jenkins Continuous Integration Server", "   Loaded: loaded (/usr/lib/systemd/system/jenkins.service; disabled; vendor preset: disabled)", "   Active: inactive (dead)"]}
+...ignoring
+
+TASK [debug] ***************************************************************************************
+ok: [osboxes] => {
+    "msg": "● jenkins.service - Jenkins Continuous Integration Server\n   Loaded: loaded (/usr/lib/systemd/system/jenkins.service; disabled; vendor preset: disabled)\n   Active: inactive (dead)"
+}
+
+PLAY RECAP *****************************************************************************************
+osboxes                    : ok=5    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=1   

@@ -1,0 +1,164 @@
+Активация Standby Мастера
+
+gpinitstandby
+
+Переключение на Standby Мастер
+
+gpactivatestandby
+
+Переключение на Mirror происходит автоматически, обратное переключение – вручную командой
+
+gprecoverseg -r
+
+Конфигурация кластера Greenplum (запрос к gp_segment_configuration):
+
+SELECT * from gp_segment_configuration order by content, role desc;
+
+
+
+РЕСУРСНЫЕ ГРУППЫ
+
+Создание новой ресурсной группы:
+
+CREATE RESOURCE GROUP rg_test 
+    WITH (CONCURRENCY = 8, CPU_RATE_LIMIT = 30,
+          MEMORY_LIMIT = 30, MEMORY_SHARED_QUOTA = 50);
+
+Мониторинг ресурсных групп:
+
+SELECT groupname, concurrency, cpu_rate_limit, memory_limit, memory_shared_quota
+    FROM gp_toolkit.gp_resgroup_config;
+
+SELECT rsgname, num_running, num_queueing FROM gp_toolkit.gp_resgroup_status;
+
+SELECT rsgname, hostname, segment_id, cpu, memory_used 
+    FROM gp_toolkit.gp_resgroup_status_per_segment ORDER BY segment_id;
+
+
+
+РАСШИРЕНИЕ DISKQUOTA
+
+Создание отдельной базы данных под дисковую квоту:
+
+CREATE DATABASE diskquota;
+
+Настройка Diskquota параметров (команды Linux):
+
+gpconfig -c shared_preload_libraries -v 'diskquota-2.2'
+
+где 'diskquota-2.2' - версия библиотеки Diskquota
+
+gpconfig -c diskquota.naptime -v 2
+
+где 2 - частота обновления данных Diskquota в секундах
+
+gpstop -ar
+
+рестарт базы данных для применения параметров
+
+Создание расширения Diskquota:
+
+CREATE EXTENSION diskquota;
+
+Инициализация Diskquota:
+
+SELECT diskquota.init_table_size_table();
+
+Создание схемы test_sch для проверки работы дисковой квоты:
+
+CREATE SCHEMA test_sch;
+
+Создание таблицы test_quota для проверки работы дисковой квоты:
+
+CREATE TABLE test_sch.test_quota(id int, descr text) distributed by (id);
+
+Задание дисковой квоты 10MB на схему test_sch:
+
+SELECT diskquota.set_schema_quota('test_sch', '10MB');
+
+Генерация трех миллионов записей в таблицу test_quota с нарушением дисковой квоты:
+
+INSERT INTO test_sch.test_quota SELECT generate_series(1,3000000) AS id, md5(random()::text) AS descr;
+
+Запрос размера таблицы test_quota (этот размер в разы превышает заданную квоты 10MB):
+
+SELECT pg_size_pretty(pg_total_relation_size('test_sch.test_quota'));
+
+Добавление одной записи к уже залитым трем миллионам - дающее ошибку Diskquota:
+
+INSERT INTO test_sch.test_quota VALUES (3000001, 'error');
+
+
+
+ХРАНЕНИЕ ДАННЫХ
+
+Создание Tablespace:
+
+CREATE TABLESPACE fastdisk LOCATION '/data1/fastdisk';
+
+Создание таблицы с указанием Tablespace:
+
+CREATE TABLE test(id int) TABLESPACE fastdisk DISTRIBUTED BY (id);
+
+Назначение Tablespace по умолчанию:
+
+SET default_tablespace = fastdisk;
+
+Список табличных пространств с идентификаторами oid:
+
+SELECT oid, * FROM pg_tablespace;
+
+Детальная информация по табличному пространству с oid=76303:
+
+SELECT * FROM gp_tablespace_location(76303);
+
+
+
+ВНЕШНИЕ ТАБЛИЦЫ
+
+Создание простой внешней таблицы, читающей файлы /etc/hosts с сегментных хостов:
+
+CREATE EXTERNAL TABLE ext_hosts1 (config text)
+LOCATION('file://sdw1/etc/hosts','file://sdw2/etc/hosts')
+FORMAT 'TEXT' (DELIMITER 'OFF');
+
+SELECT * from ext_hosts1;
+
+Создание WEB внешней таблицы, читающей файлы /etc/hosts с сегментных хостов:
+
+CREATE EXTERNAL WEB TABLE ext_hosts2 (config text)
+EXECUTE 'cat /etc/hosts' ON HOST
+FORMAT 'TEXT' (DELIMITER 'OFF');
+
+SELECT * from ext_hosts2;
+
+Создание WEB внешней таблицы, читающей файлы /etc/hosts с Мастера:
+
+CREATE EXTERNAL WEB TABLE ext_hosts3 (config text)
+EXECUTE 'cat /etc/hosts' ON MASTER
+FORMAT 'TEXT' (DELIMITER 'OFF');
+
+SELECT * from ext_hosts3;
+
+Создание WEB внешней таблицы, читающей по протоколу HTTP:
+
+CREATE EXTERNAL WEB TABLE ext_http (parent text, student text) LOCATION 
+('http://insight.dev.schoolwires.com/HelpAssets/C2Assets/C2Files/C2ImportFamRelSample.csv') FORMAT 'CSV' (HEADER);
+
+SELECT * from ext_http;
+
+Создание и наполнение внутренней таблицы table1 для демонстрации работы внешней таблицы:
+
+DROP TABLE table1;
+CREATE TABLE table1 (id int, state text) DISTRIBUTED BY (id);
+INSERT INTO table1 select gen, gen::text || 'txt' from generate_series (1,200000) gen;
+
+SELECT gp_segment_id, count(*) from table1 group by gp_segment_id;
+
+Создание WEB внешней таблицы, записывающей в файловую систему содержимое таблицы table1:
+
+CREATE WRITABLE EXTERNAL WEB TABLE ext_write (like table1) 
+EXECUTE 'cat > /tmp/web_out_$GP_SEGMENT_ID.csv' FORMAT 'CSV' (DELIMITER',');
+
+INSERT INTO ext_write SELECT * FROM table1;
+INSERT 0 200000

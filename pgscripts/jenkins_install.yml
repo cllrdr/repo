@@ -1,0 +1,28 @@
+- hosts: osboxes
+  become: true
+  gather_facts: no
+  tasks:
+
+    - name: adding jenkins.repo and  import GPG key
+      shell: '{{ item }}'
+      loop: 
+        - sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+        - sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io-2023.key
+
+    - name: install java
+      yum:
+        name: java-11-openjdk
+        state: present
+
+    - name: install jenkins
+      yum:
+        name: jenkins
+        state: installed
+
+    - name: jenkins status
+      shell: systemctl status jenkins
+      register: status
+      ignore_errors: true
+    
+    - debug:
+        msg: '{{ status.stdout }}'

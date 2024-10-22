@@ -1,0 +1,14 @@
+WITH DepartmentSummaries AS (
+    SELECT department_id, SUM(salary) AS total_salary
+    FROM employees
+    GROUP BY department_id
+),
+TotalDepartmentSummary AS (
+    SELECT department_id, SUM(total_salary) OVER () AS cumulative_sum
+    FROM DepartmentSummaries
+)
+SELECT d.department_name, ds.total_salary, td.cumulative_sum
+FROM departments d
+JOIN DepartmentSummaries ds ON d.department_id = ds.department_id
+JOIN TotalDepartmentSummary td ON td.department_id = ds.department_id
+ORDER BY ds.total_salary ASC;
