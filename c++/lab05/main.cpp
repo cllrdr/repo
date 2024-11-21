@@ -38,6 +38,13 @@ int main() {
     printf("Сортированный массив: ");
     printDynamicArray(n, arr_bubbles);
     printf("\n");
+    bubbles(arr_bubbles, n, compareCount = 0, swapCount = 0);
+    printf("Пузырьки по возрастанию \n");
+    printf("Кол-во сравнений: %d\n", compareCount);
+    printf("Кол-во перестановок: %d\n", swapCount);
+    printf("Сортированный массив: ");
+    printDynamicArray(n, arr_bubbles);
+    printf("\n");
     choices(arr_choices, n, compareCount = 0, swapCount = 0);
     printf("Сравнения по возрастанию\n");
     printf("Кол-во сравнений: %d\n", compareCount);
