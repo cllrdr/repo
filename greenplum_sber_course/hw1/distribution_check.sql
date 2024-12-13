@@ -1,0 +1,1 @@
+select gp_segment_id, count() from public.customers group by gp_segment_id order by gp_segment_id
