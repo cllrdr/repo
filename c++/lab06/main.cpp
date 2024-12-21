@@ -2,40 +2,38 @@
 
 int main() {
 
-    bool flag;
-    double x, a = -1, b = 3, dx, delta, S1, S2;
+    double x, a = -1, b = 3;
+    int count;
     const int N = 4;
     I_print arr[N];
     double (*function[])(double) = {function1, function2, function3, function4};
+    const char* name_arr[N] = {"y = x", "y = sin(22x)", "y = x^4", "y = arctg(x)"};
+    double i_toch_arr[N] = {
+        (b*b - a*a)/2.0,
+        (cos(a*22.0) - cos(b*22.0))/22.0,
+        (b*b*b*b*b - a*a*a*a*a)/5.0,
+        b*atan(b) - a*atan(a) - (log(b*b+1) - log(a*a+1))/2.0  
+    };
 
-    arr[0].name = "y = x";
-    arr[1].name = "y = sin(22x)";
-    arr[2].name = "y = x^4";
-    arr[3].name = "y = arctg(x)";
-
-    arr[0].i_toch = (b*b - a*a)/2.0;
-    arr[1].i_toch = (cos(a*22.0) - cos(b*22.0))/22.0;
-    arr[2].i_toch = (b*b*b*b*b - a*a*a*a*a)/5.0;
-    arr[3].i_toch = b*atan(b) - a*atan(a) - (log(b*b+1) - log(a*a+1))/2.0;
+    for (int i = 0; i < N; ++i) {
+        arr[i].name = new char [strlen(name_arr[i]) + 1];
+        strcpy(arr[i].name, name_arr[i]);
+        arr[i].i_toch = i_toch_arr[i];
+    };
 
     for (double eps = 0.1; eps > 1e-6; eps /= 10) {
-        for (int i = 0; i < N; ++i) {
-            dx = b - a;
-            S2 = function[i](a + dx/2) * dx;
-            int n = 1;
-            int count = 0;
-            do {
-                n *= 2;
-                S1 = S2;
-                S2 = 0;
-                dx = (b - a)/n;
-                for (int j = 0; j < n; ++j) {
-                    S2 = S2 + function[i](a + j*dx + dx/2) * dx;
-                }
-                count += 1;
-            } while ( std::abs(S2 - S1) > eps );
-            
-            arr[i].i_sum = S2;
+        for (int i = 0; i < N; ++i) {        
+            arr[i].i_sum = IntRect(function[i], a, b, eps, i, arr[i].n = 0);
+        }
+
+        std::cout << "Точность: " << eps << std::endl;
+        PrintTabl(arr, N);
+        std::cout << std::endl;
+    }
+
+    for (double eps = 0.1; eps > 1e-6; eps /= 10) {
+        for (int i = 0; i < N; ++i) {        
+            arr[i].i_sum = IntTrap(a, b, eps, i, count = 0);
             arr[i].n = count;
         }
 

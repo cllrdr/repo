@@ -18,3 +18,5 @@ double function1(double);
 double function2(double);
 double function3(double);
 double function4(double);
+double IntRect(double (*function)(double), double, double, double, int, int&);
+double IntTrap(double, double, double, int, int&);

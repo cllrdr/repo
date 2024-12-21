@@ -5,7 +5,7 @@ void PrintTabl(I_print* i_prn,int k)
 {
 const int m=4;//число столбцов таблицы
 int wn[m]={12,18,18,10};//ширина столбцов таблицы
-char *title[m]={"Function","Integral","IntSum","N "};
+const char *title[m]={"Function","Integral","IntSum","N "};
 int size[m];
 for(int i=0;i<m;i++)
  size[i]=strlen(title[i]);
