@@ -1,0 +1,5 @@
+## hub_lineitem
+md5(row(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER) ::text)
+
+## link_order_lineitem
+MD5(CAST(l_linenumber AS TEXT)) AS LineItem_HashKey

@@ -62,7 +62,7 @@
     select md5(P_PARTKEY::text),
         P_PARTKEY,
         now(),
-        'source_hw2'
+        'source_hw2' -- '/tmp/datasets/part.csv'
     from part;
     
 -- 5. Hub_LineItem
@@ -77,7 +77,7 @@
     select md5(row(L_ORDERKEY, L_PARTKEY, L_SUPPKEY, L_LINENUMBER) ::text),
         L_LINENUMBER,
         now(),
-        'source_hw2'
+        'source_hw2' -- '/tmp/datasets/lineitem.csv'
     from lineitem;
 
 
@@ -103,7 +103,7 @@
         MD5(CAST(o_custkey AS TEXT)) AS Customer_HashKey,
         MD5(CAST(o_orderkey AS TEXT)) AS Order_HashKey,
         now(),
-        'source_hw2'
+        'source_hw2' -- '/tmp/datasets/orders.csv'
     from orders;
     
 -- 2. Link_Order_LineItem
@@ -125,7 +125,7 @@
         MD5(CAST(l_orderkey AS TEXT)) AS Order_HashKey,
         MD5(CAST(l_linenumber AS TEXT)) AS LineItem_HashKey,
         now(),
-        'source_hw2'
+        'source_hw2' -- '/tmp/datasets/lineitem.csv'
     from LINEITEM;
     
 -- 3. Link_Supplier_Part
@@ -191,7 +191,7 @@
         o_orderdate AS OrderDate,
         o_orderdate + interval '1 month' AS ShipDate,
         now(),
-        'source_hw2'
+        'source_hw2' -- '/tmp/datasets/orders.csv'
     FROM ORDERS;
     
 -- 3. Satellite_Supplier
@@ -212,7 +212,7 @@
         s_address AS SupplierAddress,
         s_phone AS SupplierPhone,
         now(),
-        'source_hw2'
+        'source_hw2' -- '/tmp/datasets/supplier.csv'
     FROM SUPPLIER;
     
 -- 4. Satellite_Part
@@ -233,7 +233,7 @@
         p_mfgr AS PartDescription,
         p_retailprice AS PartPrice,
         now(),
-        'source_hw2'
+        'source_hw2' -- '/tmp/datasets/part.csv'
     FROM PART;
     
 -- 5. Satellite_LineItem
@@ -254,7 +254,7 @@
         l_extendedprice AS Price,
         l_discount AS Discount,
         now(),
-        'source_hw2'
+        'source_hw2' -- '/tmp/datasets/lineitem.csv'
     FROM LINEITEM;
     
 

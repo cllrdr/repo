@@ -1,0 +1,759 @@
+-- Выполнение запросов query1
+-- ### Query 1: Retrieve Customer Orders with Order and Customer Details
+-- from datavault
+demo=# SELECT 
+demo-#     hc.CustomerID,
+demo-#     sc.CustomerName,
+demo-#     sc.CustomerAddress,
+demo-#     sc.CustomerPhone,
+demo-#     ho.OrderID,
+demo-#     so.OrderDate,
+demo-#     so.ShipDate
+demo-# FROM 
+demo-#     Hub_Customer hc
+demo-# JOIN 
+demo-#     Link_Customer_Order lco ON hc.Customer_HashKey = lco.Customer_HashKey
+demo-# JOIN 
+demo-#     Hub_Order ho ON lco.Order_HashKey = ho.Order_HashKey
+demo-# JOIN 
+demo-#     Satellite_Customer sc ON hc.Customer_HashKey = sc.Customer_HashKey
+demo-# JOIN 
+demo-#     Satellite_Order so ON ho.Order_HashKey = so.Order_HashKey
+demo-# WHERE 
+demo-#     sc.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Customer WHERE Customer_HashKey = hc.Customer_HashKey)
+demo-# AND 
+demo-#     so.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Order WHERE Order_HashKey = ho.Order_HashKey);
+ customerid |    customername    |             customeraddress              |  customerphone  | orderid | orderdate  |  shipdate  
+------------+--------------------+------------------------------------------+-----------------+---------+------------+------------
+      21941 | Customer#000021941 | WeDI08B we3mkFba,A4mN                    | 22-165-355-9643 |   29223 | 1992-01-21 | 1992-02-21
+      21328 | Customer#000021328 | 5cZLeKciruM5d8fByzAOIfhobb3KoiQsBGtBo    | 18-973-731-9878 |   98310 | 1992-01-11 | 1992-02-11
+      25757 | Customer#000025757 | gDbv5I9QB,D77gJGMwY8,ugFhljSeLacNsfcKi0g | 34-320-823-8977 |   33410 | 1992-01-17 | 1992-02-17
+      10321 | Customer#000010321 | 7yHwp0aJepuR2WDEdG                       | 33-317-881-4986 |  180964 | 1992-01-07 | 1992-02-07
+      12490 | Customer#000012490 | T58Zp7CYZ9tLCAQ1SyGFATqfhkpXsDUyqT       | 32-778-985-7125 |  224966 | 1992-01-22 | 1992-02-22
+      19469 | Customer#000019469 | wQUlceUc7c5x4bSXlafXR                    | 17-946-181-4285 |    2688 | 1992-01-24 | 1992-02-24
+      25886 | Customer#000025886 | tBakVJVQG56bbsX4acVaeLyeSfny8cKU1Tl      | 28-291-183-6191 |  499745 | 1992-01-22 | 1992-02-22
+       9695 | Customer#000009695 | FFRx8v6TqN2rJ2Lv9XHrrxtC                 | 22-873-303-5401 |  528103 | 1992-01-09 | 1992-02-09
+       9208 | Customer#000009208 | PwHntmIpFU7sg5Jda3wBCCGtFB               | 24-357-516-6670 |  577444 | 1992-01-02 | 1992-02-02
+       8218 | Customer#000008218 | RRqu93KRujwx                             | 28-496-133-6876 |  590150 | 1992-01-06 | 1992-02-06
+      27703 | Customer#000027703 | kRr5512gkm6,,YvYZgJ                      | 34-414-674-7754 |  684997 | 1992-01-10 | 1992-02-10
+      23824 | Customer#000023824 | 9EpDIPk2BcWRzHolKFXtEFKWBhZzyjR3         | 31-959-996-4692 |  728002 | 1992-01-02 | 1992-02-02
+       5780 | Customer#000005780 | zt jbfB9c0WBjHR                          | 19-211-811-3076 |  771109 | 1992-01-18 | 1992-02-18
+      24086 | Customer#000024086 | 4O4J5A UI6JSLE,lgTwLKn5laf6oQ            | 24-585-449-8039 |  853860 | 1992-01-25 | 1992-02-25
+      15370 | Customer#000015370 | eA0i5M3FmX5J0,                           | 12-646-439-4721 |  919239 | 1992-01-16 | 1992-02-16
+      20446 | Customer#000020446 | IOX5pjrFzEzHAqkCZhxiumfTxcvi7TR          | 21-521-813-9025 |  990659 | 1992-01-12 | 1992-02-12
+      29632 | Customer#000029632 | 2CSgX RFWMN7sNHLLXRMgLAel                | 13-903-817-3806 |  994755 | 1992-01-23 | 1992-02-23
+      20515 | Customer#000020515 | AMtAfe85JSz3M4B9CpJI07Q7PlQZbP 5Bx       | 28-496-144-4388 |  350208 | 1992-01-14 | 1992-02-14
+       2176 | Customer#000002176 | b9dFlydwxZIo1igeHVEHRDMOOVzsLx0jmsUg     | 12-999-858-1929 |  443109 | 1992-01-27 | 1992-02-27
+      12181 | Customer#000012181 | 8 v8UOy7pA                               | 28-525-847-8630 |  475681 | 1992-01-07 | 1992-02-07
+      28634 | Customer#000028634 | ppyoXxESLfa                              | 34-104-522-7378 |  491139 | 1992-01-17 | 1992-02-17
+      19774 | Customer#000019774 | ZKD,1A3bBJz2mx                           | 33-974-715-2122 |   38500 | 1992-02-14 | 1992-03-14
+       9947 | Customer#000009947 | d4M, eS3JAD7pTymqu                       | 25-585-638-3521 |   60996 | 1992-02-04 | 1992-03-04
+      23158 | Customer#000023158 | 88VZ2IKEimzUFgXFeJMY3OazcZGvDCOPipWlL    | 18-692-763-9775 |  110951 | 1992-02-21 | 1992-03-21
+      27962 | Customer#000027962 | ZVwdl0os0gz5xr uJPdR                     | 13-536-734-3415 |   81154 | 1992-01-07 | 1992-02-07
+       8950 | Customer#000008950 | yMLkA0xukKvxEpFi l                       | 18-371-179-4162 |  212675 | 1992-01-17 | 1992-02-17
+      26539 | Customer#000026539 | 4Nq8w4SfM2QY2Xi                          | 24-831-270-6950 |  175398 | 1992-01-12 | 1992-02-12
+      23411 | Customer#000023411 | lZ5o25WJ85,xoqTyk2wop                    | 11-623-352-6862 |  267206 | 1992-01-20 | 1992-02-20
+      12445 | Customer#000012445 | yoztYx3,RrZ4OD40XrYQ7c                   | 15-952-783-4738 |  269191 | 1992-01-16 | 1992-02-16
+      19663 | Customer#000019663 | HdYu6x htGGD9                            | 27-500-614-3468 |  275015 | 1992-01-28 | 1992-02-28
+      15629 | Customer#000015629 | b9BzqAnKQUWDoFfvSuH3bNVtmwhcTaxY5        | 25-785-549-2575 |  329989 | 1992-01-17 | 1992-02-17
+      27788 | Customer#000027788 | 4a7XeOWxWbYvqcZb5W2JAz8                  | 15-721-109-7665 |  347846 | 1992-01-19 | 1992-02-19
+      26771 | Customer#000026771 | 9nliyy,JCXvKGABM122NVa                   | 32-615-224-6926 |  578914 | 1992-01-30 | 1992-02-29
+       5992 | Customer#000005992 | 4fAd,QxmI7PMbSmjV4RQtWB3cPe3 7C2zc       | 33-811-177-4973 |  646181 | 1992-01-13 | 1992-02-13
+      22207 | Customer#000022207 | TL5z5ea Z1,vO9lw1jO1BSF                  | 10-444-272-6048 |  896258 | 1992-01-26 | 1992-02-26
+      14914 | Customer#000014914 | twaxSZaeeBVFxGwOx7n6yuTUwDKmu03KNB       | 33-726-954-1044 |  997920 | 1992-01-12 | 1992-02-12
+      19199 | Customer#000019199 | ZMu25QnixevRGv                           | 11-786-807-4793 | 1022080 | 1992-01-20 | 1992-02-20
+      20297 | Customer#000020297 | RMLu2ItKrsa8udUTDIy0                     | 28-239-397-6826 | 1032643 | 1992-01-19 | 1992-02-19
+      25798 | Customer#000025798 | ooXQlRHx39                               | 15-863-393-5835 | 1106176 | 1992-01-23 | 1992-02-23
+      25541 | Customer#000025541 | TK7GdTOG,RF 3aemGdLNX,                   | 26-407-207-8966 | 1143461 | 1992-01-11 | 1992-02-11
+      25753 | Customer#000025753 | BDexIXE3aM8IU58Tp                        | 30-444-647-8635 | 1148677 | 1992-01-28 | 1992-02-28
+      18373 | Customer#000018373 | TaJXFXcE0LM,34                           | 28-467-355-6700 | 1157921 | 1992-01-07 | 1992-02-07
+Time: 1188.083 ms
+
+-- ### Query 1: Retrieve Customer Orders with Order and Customer Details
+-- from star
+demo=# select 
+demo-# c.c_custkey, 
+demo-# c.c_name,
+demo-# c.c_address,
+demo-# c.c_phone,
+demo-# o.o_orderkey,
+demo-# o.o_orderdate,
+demo-# l.l_shipdate
+demo-# from customer c, orders o, lineitem l
+demo-# where 
+demo-# c.c_custkey = o.o_custkey and o.o_orderkey = l.l_orderkey;
+ c_custkey |       c_name       |                c_address                 |     c_phone     | o_orderkey | o_orderdate | l_shipdate 
+-----------+--------------------+------------------------------------------+-----------------+------------+-------------+------------
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     430243 | 1994-12-24  | 1995-03-28
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     579908 | 1996-12-09  | 1997-03-30
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     287619 | 1996-12-26  | 1997-04-14
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1071617 | 1995-03-10  | 1995-07-09
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1071617 | 1995-03-10  | 1995-07-03
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1071617 | 1995-03-10  | 1995-06-08
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1071617 | 1995-03-10  | 1995-06-12
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1071617 | 1995-03-10  | 1995-04-08
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     224167 | 1996-05-08  | 1996-05-26
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     224167 | 1996-05-08  | 1996-07-05
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     224167 | 1996-05-08  | 1996-06-10
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     224167 | 1996-05-08  | 1996-08-25
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     454791 | 1992-04-19  | 1992-06-24
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     454791 | 1992-04-19  | 1992-05-02
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1192231 | 1996-06-03  | 1996-06-06
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1192231 | 1996-06-03  | 1996-07-10
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1192231 | 1996-06-03  | 1996-07-14
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1192231 | 1996-06-03  | 1996-06-19
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1192231 | 1996-06-03  | 1996-09-25
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |    1192231 | 1996-06-03  | 1996-09-25
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     164711 | 1992-04-26  | 1992-06-12
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     164711 | 1992-04-26  | 1992-04-27
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     164711 | 1992-04-26  | 1992-05-18
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     164711 | 1992-04-26  | 1992-05-09
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     164711 | 1992-04-26  | 1992-07-16
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     164711 | 1992-04-26  | 1992-07-17
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     385825 | 1995-11-01  | 1996-01-17
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     385825 | 1995-11-01  | 1995-12-17
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     385825 | 1995-11-01  | 1995-12-25
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     385825 | 1995-11-01  | 1996-02-03
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     385825 | 1995-11-01  | 1995-11-05
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     385825 | 1995-11-01  | 1995-12-11
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     385825 | 1995-11-01  | 1996-02-15
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     905633 | 1995-07-05  | 1995-08-03
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     905633 | 1995-07-05  | 1995-07-24
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     905633 | 1995-07-05  | 1995-08-08
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     905633 | 1995-07-05  | 1995-09-07
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     905633 | 1995-07-05  | 1995-08-25
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     905633 | 1995-07-05  | 1995-08-17
+         1 | Customer#000000001 | IVhzIApeRb ot,c,E                        | 25-989-741-2988 |     905633 | 1995-07-05  | 1995-10-11
+        20 | Customer#000000020 | JrPk8Pqplj4Ne                            | 32-957-234-8742 |     417280 | 1994-01-22  | 1994-03-31
+        20 | Customer#000000020 | JrPk8Pqplj4Ne                            | 32-957-234-8742 |     417280 | 1994-01-22  | 1994-04-12
+Time: 1685.073 ms
+
+-- Результат: 
+-- datavault быстрее почти в полтора раза
+-- datavault: sc - hc - lco - ho - so
+-- star: обращение к 3-м таблицам, связь по друм парам ключей
+
+
+-- Выполнение запросов query2
+-- ### Query 2: Retrieve Detailed Order Information with Line Items
+-- from datavault
+demo=# SELECT 
+demo-#     ho.OrderID,
+demo-#     so.OrderDate,
+demo-#     so.ShipDate,
+demo-#     hl.LineItemID,
+demo-#     sl.Quantity,
+demo-#     sl.Price,
+demo-#     sl.Discount
+demo-# FROM 
+demo-#     Hub_Order ho
+demo-# JOIN 
+demo-#     Link_Order_LineItem lol ON ho.Order_HashKey = lol.Order_HashKey
+demo-# JOIN 
+demo-#     Hub_LineItem hl ON lol.LineItem_HashKey = hl.LineItem_HashKey
+demo-# JOIN 
+demo-#     Satellite_Order so ON ho.Order_HashKey = so.Order_HashKey
+demo-# JOIN 
+demo-#     Satellite_LineItem sl ON hl.LineItem_HashKey = sl.LineItem_HashKey
+demo-# WHERE 
+demo-#     so.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Order WHERE Order_HashKey = ho.Order_HashKey)
+demo-# AND 
+demo-#     sl.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_LineItem WHERE LineItem_HashKey = hl.LineItem_HashKey);
+ orderid | orderdate  |  shipdate  | lineitemid | quantity |  price   | discount 
+---------+------------+------------+------------+----------+----------+----------
+    9379 | 1992-01-04 | 1992-02-04 |          4 |       13 | 13404.56 |     0.00
+   20742 | 1992-01-01 | 1992-02-01 |          2 |       26 | 42684.20 |     0.07
+   23010 | 1992-01-01 | 1992-02-01 |          2 |        9 | 14658.30 |     0.09
+   25351 | 1992-01-16 | 1992-02-16 |          1 |       23 | 34835.34 |     0.03
+   26053 | 1992-01-25 | 1992-02-25 |          5 |       16 | 29246.24 |     0.05
+   35811 | 1992-01-04 | 1992-02-04 |          4 |       45 | 54778.05 |     0.06
+   51424 | 1992-01-10 | 1992-02-10 |          3 |       27 | 32245.29 |     0.10
+   73990 | 1992-01-21 | 1992-02-21 |          3 |       40 | 62625.20 |     0.03
+   77634 | 1992-01-03 | 1992-02-03 |          1 |        4 |  6234.48 |     0.08
+   78276 | 1992-01-07 | 1992-02-07 |          6 |        1 |  1077.17 |     0.07
+   93319 | 1992-01-15 | 1992-02-15 |          6 |       27 | 37623.96 |     0.01
+  123463 | 1992-01-21 | 1992-02-21 |          2 |        6 |  8306.70 |     0.04
+  183328 | 1992-01-14 | 1992-02-14 |          1 |       49 | 74902.38 |     0.06
+  184899 | 1992-01-11 | 1992-02-11 |          2 |        2 |  3081.28 |     0.05
+  189415 | 1992-01-06 | 1992-02-06 |          5 |       41 | 76298.95 |     0.02
+  198304 | 1992-01-15 | 1992-02-15 |          6 |       38 | 49451.68 |     0.09
+  229025 | 1992-01-10 | 1992-02-10 |          6 |       20 | 37959.40 |     0.00
+  280230 | 1992-01-09 | 1992-02-09 |          1 |       38 | 53408.62 |     0.06
+  289958 | 1992-01-06 | 1992-02-06 |          3 |       20 | 26568.20 |     0.09
+  304867 | 1992-01-04 | 1992-02-04 |          2 |        5 |  6036.40 |     0.02
+  337350 | 1992-01-14 | 1992-02-14 |          2 |        4 |  6050.36 |     0.02
+  352743 | 1992-01-06 | 1992-02-06 |          1 |       44 | 65892.64 |     0.07
+  358471 | 1992-01-04 | 1992-02-04 |          4 |       40 | 72356.00 |     0.03
+  362849 | 1992-01-09 | 1992-02-09 |          1 |       46 | 63916.08 |     0.04
+  371041 | 1992-01-09 | 1992-02-09 |          5 |       25 | 33485.25 |     0.10
+  374208 | 1992-01-14 | 1992-02-14 |          1 |       21 | 36956.85 |     0.01
+  387651 | 1992-01-16 | 1992-02-16 |          4 |       47 | 68455.97 |     0.05
+  392101 | 1992-01-09 | 1992-02-09 |          2 |       10 | 11402.30 |     0.07
+  395813 | 1992-01-13 | 1992-02-13 |          3 |        5 |  6987.30 |     0.06
+  396327 | 1992-01-16 | 1992-02-16 |          2 |        8 | 11436.00 |     0.02
+  411941 | 1992-01-19 | 1992-02-19 |          5 |       11 | 18455.36 |     0.04
+  420228 | 1992-01-08 | 1992-02-08 |          3 |       39 | 70937.10 |     0.04
+  454277 | 1992-01-04 | 1992-02-04 |          5 |       16 | 20421.60 |     0.08
+  457414 | 1992-01-14 | 1992-02-14 |          1 |        1 |  1035.12 |     0.08
+  466659 | 1992-01-01 | 1992-02-01 |          1 |       36 | 49985.28 |     0.02
+  471138 | 1992-01-10 | 1992-02-10 |          1 |       50 | 48351.50 |     0.03
+  492642 | 1992-01-18 | 1992-02-18 |          2 |       41 | 38991.41 |     0.06
+  492836 | 1992-01-03 | 1992-02-03 |          3 |       47 | 63705.21 |     0.03
+  496065 | 1992-01-03 | 1992-02-03 |          4 |       44 | 43959.52 |     0.07
+  502882 | 1992-01-03 | 1992-02-03 |          3 |       26 | 35944.22 |     0.02
+  515077 | 1992-01-01 | 1992-02-01 |          6 |        1 |  1430.51 |     0.03
+  543366 | 1992-01-11 | 1992-02-11 |          7 |       31 | 44314.50 |     0.02
+Time: 3702.047 ms
+
+-- ### Query 2: Retrieve Detailed Order Information with Line Items
+-- from star
+demo=# select 
+demo-#     o.o_orderkey,
+demo-#     o.o_orderdate,
+demo-#     l.l_shipdate,
+demo-#     l.l_linenumber,
+demo-#     l.l_quantity,
+demo-#     l.l_extendedprice,
+demo-#     l.l_discount
+demo-# from orders o, lineitem l 
+demo-# where o.o_orderkey = l.l_orderkey;
+ o_orderkey | o_orderdate | l_shipdate | l_linenumber | l_quantity | l_extendedprice | l_discount 
+------------+-------------+------------+--------------+------------+-----------------+------------
+        293 | 1992-10-02  | 1992-12-24 |            2 |      11.00 |        13412.08 |       0.10
+       1796 | 1992-11-21  | 1992-12-01 |            1 |      28.00 |        52639.16 |       0.08
+       2176 | 1992-11-10  | 1992-11-29 |            1 |      38.00 |        37279.52 |       0.02
+       2566 | 1992-10-10  | 1992-12-20 |            2 |      42.00 |        43305.78 |       0.08
+       2566 | 1992-10-10  | 1992-12-14 |            5 |       9.00 |        10325.16 |       0.04
+       3333 | 1992-09-16  | 1992-12-06 |            1 |      27.00 |        51731.46 |       0.06
+       9319 | 1992-09-11  | 1992-12-24 |            4 |      17.00 |        20217.76 |       0.06
+      10982 | 1992-12-11  | 1992-12-21 |            7 |      18.00 |        18631.98 |       0.01
+      11137 | 1992-11-30  | 1992-12-07 |            1 |       3.00 |         3898.11 |       0.08
+      12455 | 1992-09-04  | 1992-12-21 |            3 |      45.00 |        82886.40 |       0.05
+      13984 | 1992-09-25  | 1992-12-03 |            2 |      45.00 |        73651.95 |       0.07
+      18592 | 1992-10-01  | 1992-12-12 |            4 |       6.00 |         9375.72 |       0.10
+      18725 | 1992-11-22  | 1992-12-08 |            2 |       3.00 |         3519.75 |       0.10
+      20933 | 1992-08-27  | 1992-12-22 |            6 |       8.00 |        12309.04 |       0.05
+      22080 | 1992-10-14  | 1992-11-29 |            2 |      27.00 |        38029.50 |       0.01
+      22182 | 1992-09-06  | 1992-12-12 |            2 |       2.00 |         2062.24 |       0.03
+      22182 | 1992-09-06  | 1992-12-05 |            5 |      12.00 |        17526.24 |       0.02
+      25123 | 1992-09-22  | 1992-12-15 |            2 |       9.00 |        15306.84 |       0.08
+      25856 | 1992-09-15  | 1992-12-17 |            7 |       9.00 |        12009.60 |       0.05
+      27841 | 1992-09-17  | 1992-12-03 |            1 |       5.00 |         9194.60 |       0.01
+      27841 | 1992-09-17  | 1992-12-02 |            4 |      10.00 |        18159.00 |       0.02
+      28544 | 1992-08-29  | 1992-12-20 |            2 |      23.00 |        38174.02 |       0.07
+      29536 | 1992-09-08  | 1992-12-05 |            7 |      28.00 |        33579.28 |       0.08
+      29537 | 1992-09-20  | 1992-12-10 |            7 |      33.00 |        52260.78 |       0.01
+      31270 | 1992-11-24  | 1992-12-22 |            3 |      46.00 |        43747.84 |       0.08
+      32327 | 1992-08-08  | 1992-12-07 |            4 |       3.00 |         3934.20 |       0.04
+      33893 | 1992-09-21  | 1992-12-16 |            3 |      14.00 |        21905.10 |       0.06
+      34852 | 1992-09-06  | 1992-12-17 |            4 |      16.00 |        29630.88 |       0.07
+      36294 | 1992-08-21  | 1992-12-01 |            1 |       1.00 |         1268.34 |       0.08
+      36390 | 1992-10-13  | 1992-11-30 |            2 |      34.00 |        46016.62 |       0.03
+      37287 | 1992-11-02  | 1992-12-07 |            5 |      40.00 |        45969.20 |       0.01
+      40007 | 1992-08-31  | 1992-12-01 |            2 |      15.00 |        15766.65 |       0.04
+      40193 | 1992-09-03  | 1992-12-20 |            3 |       9.00 |        15414.93 |       0.07
+      40193 | 1992-09-03  | 1992-11-26 |            4 |      27.00 |        45596.25 |       0.05
+      41634 | 1992-12-09  | 1992-12-15 |            7 |      24.00 |        30440.64 |       0.05
+      43653 | 1992-10-31  | 1992-12-16 |            3 |       5.00 |         7603.05 |       0.02
+      47649 | 1992-11-01  | 1992-12-01 |            1 |      27.00 |        29840.40 |       0.05
+      47971 | 1992-10-30  | 1992-12-07 |            3 |      21.00 |        37776.27 |       0.03
+      50503 | 1992-11-22  | 1992-12-15 |            6 |      27.00 |        38677.23 |       0.02
+      51140 | 1992-09-15  | 1992-12-08 |            1 |      35.00 |        41169.45 |       0.07
+      52419 | 1992-09-19  | 1992-12-15 |            3 |      42.00 |        66513.72 |       0.02
+      56676 | 1992-10-26  | 1992-12-06 |            1 |      19.00 |        29728.16 |       0.10
+Time: 1083.945 ms
+
+-- Результат: 
+-- datavault медленее в 3.5 раза
+-- datavault: so - ho - lol - hl - sl
+-- star: обращение к 2-м таблицам, связь по одной парам ключей
+
+-- Выполнение запросов query3
+-- ### Query 3: Retrieve Supplier and Part Information for Each Supplier-Part Relationship
+-- from datavault
+demo=# SELECT 
+demo-#     hs.SupplierID,
+demo-#     ss.SupplierName,
+demo-#     ss.SupplierAddress,
+demo-#     ss.SupplierPhone,
+demo-#     hp.PartID,
+demo-#     sp.PartName,
+demo-#     sp.PartDescription,
+demo-#     sp.PartPrice
+demo-# FROM 
+demo-#     Hub_Supplier hs
+demo-# JOIN 
+demo-#     Link_Supplier_Part lsp ON hs.Supplier_HashKey = lsp.Supplier_HashKey
+demo-# JOIN 
+demo-#     Hub_Part hp ON lsp.Part_HashKey = hp.Part_HashKey
+demo-# JOIN 
+demo-#     Satellite_Supplier ss ON hs.Supplier_HashKey = ss.Supplier_HashKey
+demo-# JOIN 
+demo-#     Satellite_Part sp ON hp.Part_HashKey = sp.Part_HashKey
+demo-# WHERE 
+demo-#     ss.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Supplier WHERE Supplier_HashKey = hs.Supplier_HashKey)
+demo-# AND 
+demo-#     sp.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Part WHERE Part_HashKey = hp.Part_HashKey);
+ supplierid |    suppliername    |             supplieraddress              |  supplierphone  | partid |                     partname                      | partdescription | partprice 
+------------+--------------------+------------------------------------------+-----------------+--------+---------------------------------------------------+-----------------+-----------
+          7 | Supplier#000000007 | s,4TicNGB4uO6PaSqNBUq                    | 33-990-965-2201 |      6 | bisque cornflower lawn forest magenta             | Manufacturer#2  |    906.00
+         53 | Supplier#000000053 | i9v3 EsYCfLKFU6PIt8iihBOHBB37yR7b3GD7Rt  | 17-886-101-6083 |     52 | lemon midnight lace sky deep                      | Manufacturer#3  |    952.05
+        599 | Supplier#000000599 | R u1wkvs4 B0wlbPbT8WrSzqoXZG0CjbsuAbPpUs | 14-208-385-3654 |     98 | frosted peru chiffon yellow aquamarine            | Manufacturer#5  |    998.09
+       1101 | Supplier#000001101 | Hr1EBv8bSuV0wcG                          | 20-392-415-6037 |    100 | cyan orchid indian cornflower saddle              | Manufacturer#3  |   1000.10
+       1102 | Supplier#000001102 | LRXta86ao,jqc3x6PcLdhE0QH28kXkU          | 20-630-132-3089 |    101 | powder deep lavender violet gainsboro             | Manufacturer#3  |   1001.10
+        110 | Supplier#000000110 | ehv9ObpyN0                               | 25-824-874-9077 |    109 | lemon black indian cornflower pale                | Manufacturer#3  |   1009.10
+       1124 | Supplier#000001124 | I ptruqPB5c1felgrY9dsu                   | 11-219-426-9501 |    123 | deep dim peach light beige                        | Manufacturer#1  |   1023.12
+        648 | Supplier#000000648 | 0RXVM8t80LLWl                            | 30-526-602-8400 |    147 | honeydew orange dodger linen lace                 | Manufacturer#1  |   1047.14
+       1665 | Supplier#000001665 | ZH9hZfa0baJVYmfXu3uoudL X                | 30-377-968-5888 |    164 | orange cyan magenta navajo indian                 | Manufacturer#2  |   1064.16
+       1192 | Supplier#000001192 | qMXIndghNz                               | 29-248-593-6081 |    191 | mint midnight puff forest peach                   | Manufacturer#3  |   1091.19
+        723 | Supplier#000000723 | ZFI9Pb HTy,8e,mY0mqP6ThbN                | 15-714-811-1747 |    222 | aquamarine puff antique drab beige                | Manufacturer#3  |   1122.22
+       1745 | Supplier#000001745 | HpEkG64m4W                               | 14-694-581-3111 |    244 | seashell ghost cyan burlywood thistle             | Manufacturer#5  |   1144.24
+       1251 | Supplier#000001251 | 6vY5KGVIl6VW8dM0uGAM9MgVtgEl9KT21jYiS    | 30-842-722-2771 |    250 | antique goldenrod floral forest slate             | Manufacturer#4  |   1150.25
+        760 | Supplier#000000760 | ob94rzX66tJ35aKv2jR,inK1                 | 31-367-390-9165 |    259 | ghost puff sky linen burnished                    | Manufacturer#2  |   1159.25
+        506 | Supplier#000000506 | hnXNVHB1ao5rlGLkrS64kBz5C5rx7 R4dqO5CNv  | 33-582-741-7991 |      5 | forest brown coral puff cream                     | Manufacturer#3  |    905.00
+       1506 | Supplier#000001506 | 0mjuNYVOEOzcX1EV80CX6IwlB                | 29-282-871-8851 |      5 | forest brown coral puff cream                     | Manufacturer#3  |    905.00
+         41 | Supplier#000000041 | G 1FKHR435 wMKFmyt                       | 28-739-447-2525 |     40 | lemon midnight metallic sienna steel              | Manufacturer#2  |    940.04
+       1541 | Supplier#000001541 | rPUV63BMAmT8Y2qhs 5Z9IT D8zjCJeBHZjW     | 16-290-201-5378 |     40 | lemon midnight metallic sienna steel              | Manufacturer#2  |    940.04
+         49 | Supplier#000000049 | Nvq 6macF4GtJvz                          | 34-211-567-6800 |     48 | slate thistle cornsilk pale forest                | Manufacturer#5  |    948.04
+       1057 | Supplier#000001057 | 2,cJszqUjE                               | 19-146-393-5146 |     56 | antique beige brown deep dodger                   | Manufacturer#1  |    956.05
+       1107 | Supplier#000001107 | osYWPXbB4Jvh68UvinCY06SkHE18gqzDAG0rYT   | 27-902-546-2619 |    106 | cornsilk bisque seashell lemon frosted            | Manufacturer#3  |   1006.10
+       1646 | Supplier#000001646 | f0X8oohw5jcmKtacTCX71xgc                 | 33-353-633-6687 |    145 | navajo lavender chocolate deep hot                | Manufacturer#5  |   1045.14
+       1650 | Supplier#000001650 | 0R0dQzwyoH6vgewbsib0u6wnkuj,JCdR         | 28-235-797-5129 |    149 | tan thistle frosted indian lawn                   | Manufacturer#2  |   1049.14
+       1184 | Supplier#000001184 | gKEtnB,QWGHCcwL2P9i                      | 21-880-957-2610 |    183 | ivory white burnished papaya cornflower           | Manufacturer#5  |   1083.18
+        688 | Supplier#000000688 | D fw5ocppmZpYBBIPI718hCihLDZ5KhKX        | 13-855-777-3804 |    187 | white red lace deep pale                          | Manufacturer#4  |   1087.18
+        691 | Supplier#000000691 | XU1STWHllW5I5Rw9X,jsZi7X7M 4             | 22-930-512-3497 |    190 | chartreuse goldenrod midnight cornflower blush    | Manufacturer#5  |   1090.19
+       1691 | Supplier#000001691 | nBaw4F r,qo2Px7uQnD0inobFV               | 12-221-939-2938 |    190 | chartreuse goldenrod midnight cornflower blush    | Manufacturer#5  |   1090.19
+        789 | Supplier#000000789 | LF,j2pxKPgtbDGaj,l47vutF5Vz              | 23-428-566-8444 |    288 | tan purple yellow ivory olive                     | Manufacturer#2  |   1188.28
+        825 | Supplier#000000825 | ,9nqq,JWR0ztG0qp4rlDHgtShbP7AViBj        | 30-486-346-1320 |    324 | aquamarine ivory magenta linen black              | Manufacturer#2  |   1224.32
+        349 | Supplier#000000349 | 21Sp51XIZ9vTChQBWv0CA1o1P,26clhjR        | 23-532-708-7267 |    348 | blush navajo peru chartreuse dim                  | Manufacturer#5  |   1248.34
+        384 | Supplier#000000384 | zMr51gtJ0Vu83Dk                          | 17-554-428-8511 |    383 | seashell tan purple almond coral                  | Manufacturer#2  |   1283.38
+       1905 | Supplier#000001905 | VhOcLXQyJM,Z,,QAVNWUPVNS58O              | 18-973-853-1876 |    404 | maroon olive pink rose cornflower                 | Manufacturer#4  |   1304.40
+        422 | Supplier#000000422 | iu4c7rkFFNOvmfx,aSs62I                   | 20-645-417-6790 |    421 | white black burnished brown medium                | Manufacturer#1  |   1321.42
+        446 | Supplier#000000446 | na LX4kqDQbh                             | 18-902-583-3116 |    445 | metallic ivory floral cornsilk burnished          | Manufacturer#1  |   1345.44
+         21 | Supplier#000000021 | 81CavellcrJ0PQ3CPBID0Z0JwyJm0ka5igEs     | 12-253-590-5816 |    520 | spring honeydew sky sandy almond                  | Manufacturer#1  |   1420.52
+        530 | Supplier#000000530 | 0qwCMwobKY OcmLyfRXlagA8ukENJv,          | 13-747-781-9694 |    529 | powder tan brown royal blush                      | Manufacturer#3  |   1429.52
+       1030 | Supplier#000001030 | t8woLlk9uN3WTwa7zo                       | 16-100-461-1195 |    529 | powder tan brown royal blush                      | Manufacturer#3  |   1429.52
+       1248 | Supplier#000001248 | LBMD4udQVK0txG2UE2uO2u6bmq9SfYd57rgkSAw  | 14-263-397-4453 |    247 | medium gainsboro lawn coral peach                 | Manufacturer#5  |   1147.24
+        259 | Supplier#000000259 | 2zzYBzG12K                               | 20-901-530-6532 |    258 | royal frosted blue pale dim                       | Manufacturer#4  |   1158.25
+        759 | Supplier#000000759 | 1wnIv4xlR2,zrcb495qI0gcXrJyVPrQjNU       | 18-430-878-7018 |    258 | royal frosted blue pale dim                       | Manufacturer#4  |   1158.25
+       1261 | Supplier#000001261 | cDxqWVt0QNlfIdZRciz                      | 27-516-126-8540 |    260 | firebrick thistle lime frosted khaki              | Manufacturer#5  |   1160.26
+        775 | Supplier#000000775 | tmhWTbbv9lv                              | 12-946-153-9942 |    274 | cyan lawn snow sky peru                           | Manufacturer#2  |   1174.27
+        786 | Supplier#000000786 | QiKBtsiRdDZ2xGcwZgOSoMaKSH4HQ360,88L     | 18-280-624-2919 |    285 | cream seashell orange frosted brown               | Manufacturer#2  |   1185.28
+        303 | Supplier#000000303 | MCFk0WJH4O9Fj,m3as3bdIgnP4pe 8qPj,wfo    | 18-932-912-3102 |    302 | black seashell sky grey snow                      | Manufacturer#4  |   1202.30
+        316 | Supplier#000000316 | uXJ13cI7fXByGLBoQ8VU9AT                  | 10-382-551-5105 |    315 | navy cyan orchid seashell moccasin                | Manufacturer#2  |   1215.31
+        319 | Supplier#000000319 | tcES8Ay3zcHQER9K6gAKFWlDvcg nrbPl        | 28-288-466-7847 |    318 | rosy rose indian puff pale                        | Manufacturer#1  |   1218.31
+        873 | Supplier#000000873 | jBfvdFseU7cz315kGbbocXnCwDKW,3iRlyaj3wn0 | 11-253-186-4222 |    372 | black frosted aquamarine maroon orange            | Manufacturer#3  |   1272.37
+        875 | Supplier#000000875 | pBjvc 55kMxfQ3gtYUiuy5TNRyd              | 23-165-986-6088 |    374 | orange lemon cream dim midnight                   | Manufacturer#1  |   1274.37
+        376 | Supplier#000000376 | L8OWL3jXMCR3Gh                           | 26-752-731-5943 |    375 | floral blush lawn puff brown                      | Manufacturer#1  |   1275.37
+       1405 | Supplier#000001405 | te5joWcj1Wsc pi                          | 14-348-753-2527 |    404 | maroon olive pink rose cornflower                 | Manufacturer#4  |   1304.40
+       1922 | Supplier#000001922 | 82oW0v1k Dx0f6                           | 26-179-916-4721 |    421 | white black burnished brown medium                | Manufacturer#1  |   1321.42
+        946 | Supplier#000000946 | RpFjkZmA ScvLe                           | 25-522-937-5559 |    445 | metallic ivory floral cornsilk burnished          | Manufacturer#1  |   1345.44
+Time: 431.385 ms
+
+-- ### Query 3: Retrieve Supplier and Part Information for Each Supplier-Part Relationship
+-- from star
+demo=# select
+demo-#     s.s_suppkey,
+demo-#     s.s_name,
+demo-#     s.s_address,
+demo-#     s.s_phone,
+demo-#     p.p_partkey,
+demo-#     p.p_name,
+demo-#     p.p_mfgr,
+demo-#     p.p_retailprice
+demo-# from supplier s, part p, partsupp ps
+demo-#     where s.s_suppkey = ps.ps_suppkey and ps.ps_partkey = p.p_partkey;
+ s_suppkey |          s_name           |                s_address                 |     s_phone     | p_partkey |                      p_name                       |          p_mfgr           | p_retailprice 
+-----------+---------------------------+------------------------------------------+-----------------+-----------+---------------------------------------------------+---------------------------+---------------
+      1002 | Supplier#000001002        | bzwzvRnMTA2IEIv,AKydTru0vsbETQkhV        | 32-102-374-6308 |         1 | goldenrod lavender spring chocolate lace          | Manufacturer#1            |        901.00
+       502 | Supplier#000000502        | AutSetu5u6moXK6Y3rpoWREh                 | 14-678-262-5636 |         1 | goldenrod lavender spring chocolate lace          | Manufacturer#1            |        901.00
+      1502 | Supplier#000001502        | UdhLqlClUU,G8r0FCi6mELF3eeQ              | 12-226-454-8297 |         1 | goldenrod lavender spring chocolate lace          | Manufacturer#1            |        901.00
+         2 | Supplier#000000002        | 89eJ5ksX3ImxJQBvxObC,                    | 15-679-861-2259 |         1 | goldenrod lavender spring chocolate lace          | Manufacturer#1            |        901.00
+        13 | Supplier#000000013        | HK71HQyWoqRWOX8GI FpgAifW,2PoH           | 13-727-620-7813 |        12 | cornflower wheat orange maroon ghost              | Manufacturer#3            |        912.01
+      1013 | Supplier#000001013        | riRcntps4KEDtYScjpMIWeYF6mNnR            | 32-194-698-3365 |        12 | cornflower wheat orange maroon ghost              | Manufacturer#3            |        912.01
+      1513 | Supplier#000001513        | AUhtpbh 7oUdo5Gy5AqhR0c1r3p              | 14-417-652-3628 |        12 | cornflower wheat orange maroon ghost              | Manufacturer#3            |        912.01
+       513 | Supplier#000000513        | YMhcTaVkhw0nO9B,                         | 14-481-495-8505 |        12 | cornflower wheat orange maroon ghost              | Manufacturer#3            |        912.01
+      1016 | Supplier#000001016        | iRdPyOMBwZJ1tC SuISP                     | 31-756-833-2500 |        15 | blanched honeydew sky turquoise medium            | Manufacturer#1            |        915.01
+        16 | Supplier#000000016        | YjP5C55zHDXL7LalK27zfQnwejdpin4AMpvh     | 32-822-502-4215 |        15 | blanched honeydew sky turquoise medium            | Manufacturer#1            |        915.01
+      1516 | Supplier#000001516        | C1SzpVp67oxXWyL7reHB3kJ                  | 18-431-532-9957 |        15 | blanched honeydew sky turquoise medium            | Manufacturer#1            |        915.01
+       516 | Supplier#000000516        | z5Mm65PAP4m                              | 15-165-647-2301 |        15 | blanched honeydew sky turquoise medium            | Manufacturer#1            |        915.01
+      1021 | Supplier#000001021        | WCXJ5r,lNGHu,HMckhiuRi91gu0              | 12-140-187-7393 |        20 | ivory navy honeydew sandy midnight                | Manufacturer#1            |        920.02
+        21 | Supplier#000000021        | 81CavellcrJ0PQ3CPBID0Z0JwyJm0ka5igEs     | 12-253-590-5816 |        20 | ivory navy honeydew sandy midnight                | Manufacturer#1            |        920.02
+      1521 | Supplier#000001521        | OdAz Nj92X2 CqnZQAbfl5XZHvzok4           | 12-207-928-2351 |        20 | ivory navy honeydew sandy midnight                | Manufacturer#1            |        920.02
+       521 | Supplier#000000521        | jQ648xqiuJaHLQjwrq5b                     | 11-887-652-3799 |        20 | ivory navy honeydew sandy midnight                | Manufacturer#1            |        920.02
+      1524 | Supplier#000001524        | aqGwAL1xCDiPhixZzS47IR2rfuXCa7o          | 22-928-971-3778 |        23 | coral lavender seashell rosy burlywood            | Manufacturer#3            |        923.02
+      1024 | Supplier#000001024        | w924TeycgGZvIbF2BApEzAzvZg7pVgRmWomz     | 20-360-741-6895 |        23 | coral lavender seashell rosy burlywood            | Manufacturer#3            |        923.02
+       524 | Supplier#000000524        | rTYNcqhFosNU,4                           | 23-993-423-3788 |        23 | coral lavender seashell rosy burlywood            | Manufacturer#3            |        923.02
+        24 | Supplier#000000024        | C4nPvLrVmKPPabFCj                        | 10-620-939-2254 |        23 | coral lavender seashell rosy burlywood            | Manufacturer#3            |        923.02
+      1536 | Supplier#000001536        | 1j EhxcXVVIzVlc9hN4f7JMHMXi3QAAhvPemzY0V | 20-837-590-2286 |        35 | green blush tomato burlywood seashell             | Manufacturer#4            |        935.03
+        36 | Supplier#000000036        | mzSpBBJvbjdx3UKTW3bLFewRD78D91lAC879     | 23-273-493-3679 |        35 | green blush tomato burlywood seashell             | Manufacturer#4            |        935.03
+      1036 | Supplier#000001036        | SZ8jSo8Mr34                              | 19-113-246-8057 |        35 | green blush tomato burlywood seashell             | Manufacturer#4            |        935.03
+       536 | Supplier#000000536        | dzf PbgzKpWBDim5S1BSPLBNzxFpxZNUE        | 27-749-678-1361 |        35 | green blush tomato burlywood seashell             | Manufacturer#4            |        935.03
+      1539 | Supplier#000001539        | taspo8MUN0dFhw                           | 22-641-865-1602 |        38 | seashell papaya white mint brown                  | Manufacturer#4            |        938.03
+      1039 | Supplier#000001039        | GXFzvmVvzg56hhqmVfwH7XvN80xwx5           | 16-217-795-1403 |        38 | seashell papaya white mint brown                  | Manufacturer#4            |        938.03
+        39 | Supplier#000000039        | ZM, nSYpEPWr1yAFHaC91qjFcijjeU5eH        | 18-851-856-5633 |        38 | seashell papaya white mint brown                  | Manufacturer#4            |        938.03
+       539 | Supplier#000000539        | GG5N3GIdNmmvhKs52Y                       | 11-844-496-3836 |        38 | seashell papaya white mint brown                  | Manufacturer#4            |        938.03
+      1541 | Supplier#000001541        | rPUV63BMAmT8Y2qhs 5Z9IT D8zjCJeBHZjW     | 16-290-201-5378 |        40 | lemon midnight metallic sienna steel              | Manufacturer#2            |        940.04
+        41 | Supplier#000000041        | G 1FKHR435 wMKFmyt                       | 28-739-447-2525 |        40 | lemon midnight metallic sienna steel              | Manufacturer#2            |        940.04
+       541 | Supplier#000000541        | Nxggufcm ,hR                             | 27-914-557-6989 |        40 | lemon midnight metallic sienna steel              | Manufacturer#2            |        940.04
+      1041 | Supplier#000001041        | ZNny0BQ7n2qc7b6V5                        | 14-565-600-1255 |        40 | lemon midnight metallic sienna steel              | Manufacturer#2            |        940.04
+        45 | Supplier#000000045        | LcKnsa8XGtIO0WYSB7hkOrH rnzRg1           | 19-189-635-8862 |        44 | saddle cream wheat lemon burnished                | Manufacturer#4            |        944.04
+      1545 | Supplier#000001545        | MNmemS8F3k46UJchrAjJMAo9pRjyoKQC8qk Nfer | 23-323-451-6760 |        44 | saddle cream wheat lemon burnished                | Manufacturer#4            |        944.04
+      1045 | Supplier#000001045        |  GYqHNiVWsfYm9U                          | 28-801-627-8967 |        44 | saddle cream wheat lemon burnished                | Manufacturer#4            |        944.04
+       545 | Supplier#000000545        | D8SE9UgTdgq3oNH8RzaxDKpbsA BlRKsf        | 12-876-408-4086 |        44 | saddle cream wheat lemon burnished                | Manufacturer#4            |        944.04
+      1048 | Supplier#000001048        | f172BTkk1PgyO06NwAt                      | 19-493-938-3406 |        47 | honeydew red azure magenta brown                  | Manufacturer#4            |        947.04
+       548 | Supplier#000000548        | btRiQsq qEK0qg0T                         | 22-790-987-6339 |        47 | honeydew red azure magenta brown                  | Manufacturer#4            |        947.04
+      1548 | Supplier#000001548        | 1v5gKgtjgE6BAATavPOmjzus20h3r4u          | 20-589-983-6951 |        47 | honeydew red azure magenta brown                  | Manufacturer#4            |        947.04
+        48 | Supplier#000000048        | jg0U FNPMQDuyuKvTnLXXaLf3Wl6OtONA6mQlWJ  | 24-722-551-9498 |        47 | honeydew red azure magenta brown                  | Manufacturer#4            |        947.04
+      1549 | Supplier#000001549        | MYsM43isIm8Y5u                           | 10-983-665-2259 |        48 | slate thistle cornsilk pale forest                | Manufacturer#5            |        948.04
+        49 | Supplier#000000049        | Nvq 6macF4GtJvz                          | 34-211-567-6800 |        48 | slate thistle cornsilk pale forest                | Manufacturer#5            |        948.04
+      1049 | Supplier#000001049        | hJjbktopDAAM                             | 27-362-693-9939 |        48 | slate thistle cornsilk pale forest                | Manufacturer#5            |        948.04
+       549 | Supplier#000000549        | oy89mLRUwTVCoU                           | 10-377-880-8280 |        48 | slate thistle cornsilk pale forest                | Manufacturer#5            |        948.04
+       550 | Supplier#000000550        | QQavssDXnYHbvOrg                         | 22-648-743-9295 |        49 | light firebrick cyan puff blue                    | Manufacturer#2            |        949.04
+        50 | Supplier#000000050        | rGobqSMMYz0ErrPhCGS                      | 19-561-560-7437 |        49 | light firebrick cyan puff blue                    | Manufacturer#2            |        949.04
+      1050 | Supplier#000001050        | Eu5ETUhMtI                               | 24-271-128-7378 |        49 | light firebrick cyan puff blue                    | Manufacturer#2            |        949.04
+      1550 | Supplier#000001550        | WbdqrA NXZqJz4e74                        | 15-207-965-2975 |        49 | light firebrick cyan puff blue                    | Manufacturer#2            |        949.04
+      1551 | Supplier#000001551        | eUU5Yh2vBpBKaw93MkAui6rLrkjbs9           | 32-712-140-2807 |        50 | linen blanched tomato slate medium                | Manufacturer#3            |        950.05
+      1051 | Supplier#000001051        | DxBxQBR5cbx50lke0A9nr5pkkRrt7Sp          | 22-964-969-2212 |        50 | linen blanched tomato slate medium                | Manufacturer#3            |        950.05
+       551 | Supplier#000000551        | ZNiqP1w6Z SGZsLllIhaicTnLCCuAepdNbkm6pJ  | 18-297-775-8421 |        50 | linen blanched tomato slate medium                | Manufacturer#3            |        950.05
+        51 | Supplier#000000051        | rDkBXb01POIKjOwrij62uM8O4                | 19-475-537-1368 |        50 | linen blanched tomato slate medium                | Manufacturer#3            |        950.05
+Time: 224.991 ms
+
+-- Результат: 
+-- datavault медленее в 2 раза
+-- datavault: ss - hs - lsp - hp - sp
+-- star: обращение к 2-м таблицам, связь через промежуточную таблицу по двум парам ключей
+
+-- Выполнение запросов query4
+-- ### Query 4: Retrieve Comprehensive Customer Order and Line Item Details
+-- from datavault
+demo=# SELECT 
+demo-#     hc.CustomerID,
+demo-#     sc.CustomerName,
+demo-#     ho.OrderID,
+demo-#     so.OrderDate,
+demo-#     so.ShipDate,
+demo-#     hl.LineItemID,
+demo-#     sl.Quantity,
+demo-#     sl.Price,
+demo-#     sl.Discount
+demo-# FROM 
+demo-#     Hub_Customer hc
+demo-# JOIN 
+demo-#     Link_Customer_Order lco ON hc.Customer_HashKey = lco.Customer_HashKey
+demo-# JOIN 
+demo-#     Hub_Order ho ON lco.Order_HashKey = ho.Order_HashKey
+demo-# JOIN 
+demo-#     Link_Order_LineItem lol ON ho.Order_HashKey = lol.Order_HashKey
+demo-# JOIN 
+demo-#     Hub_LineItem hl ON lol.LineItem_HashKey = hl.LineItem_HashKey
+demo-# JOIN 
+demo-#     Satellite_Customer sc ON hc.Customer_HashKey = sc.Customer_HashKey
+demo-# JOIN 
+demo-#     Satellite_Order so ON ho.Order_HashKey = so.Order_HashKey
+demo-# JOIN 
+demo-#     Satellite_LineItem sl ON hl.LineItem_HashKey = sl.LineItem_HashKey
+demo-# WHERE 
+demo-#     sc.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Customer WHERE Customer_HashKey = hc.Customer_HashKey)
+demo-# AND 
+demo-#     so.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Order WHERE Order_HashKey = ho.Order_HashKey)
+demo-# AND 
+demo-#     sl.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_LineItem WHERE LineItem_HashKey = hl.LineItem_HashKey);
+ customerid |    customername    | orderid | orderdate  |  shipdate  | lineitemid | quantity |  price   | discount 
+------------+--------------------+---------+------------+------------+------------+----------+----------+----------
+      11767 | Customer#000011767 |  249220 | 1992-03-27 | 1992-04-27 |          2 |       44 | 74746.76 |     0.03
+       3922 | Customer#000003922 |  619750 | 1992-03-04 | 1992-04-04 |          5 |       24 | 43341.12 |     0.04
+      23221 | Customer#000023221 |  629829 | 1992-02-22 | 1992-03-22 |          2 |       36 | 37192.68 |     0.02
+      24314 | Customer#000024314 | 1131042 | 1992-03-07 | 1992-04-07 |          1 |       39 | 53876.94 |     0.01
+      26206 | Customer#000026206 | 1144160 | 1992-01-04 | 1992-02-04 |          2 |       19 | 19419.90 |     0.08
+       2561 | Customer#000002561 |  517668 | 1992-02-22 | 1992-03-22 |          2 |       27 | 47839.95 |     0.08
+      12598 | Customer#000012598 |  539685 | 1992-04-23 | 1992-05-23 |          1 |       19 | 19514.90 |     0.07
+      12985 | Customer#000012985 |  456226 | 1992-02-09 | 1992-03-09 |          5 |        6 |  5946.36 |     0.08
+      17413 | Customer#000017413 |  470144 | 1992-01-29 | 1992-02-29 |          2 |       46 | 54522.42 |     0.04
+      26360 | Customer#000026360 |  106944 | 1992-01-24 | 1992-02-24 |          1 |       13 | 12415.26 |     0.08
+      25348 | Customer#000025348 |  115012 | 1992-04-02 | 1992-05-02 |          7 |       11 | 19446.24 |     0.04
+       7397 | Customer#000007397 |  431075 | 1992-05-14 | 1992-06-14 |          2 |       36 | 60579.00 |     0.07
+      24151 | Customer#000024151 |  497510 | 1992-03-15 | 1992-04-15 |          4 |        7 | 10385.06 |     0.10
+       2101 | Customer#000002101 |  793632 | 1992-03-01 | 1992-04-01 |          1 |       50 | 61414.50 |     0.01
+      10706 | Customer#000010706 |  816609 | 1992-06-11 | 1992-07-11 |          2 |       12 | 16337.40 |     0.10
+      11996 | Customer#000011996 |  846722 | 1992-06-07 | 1992-07-07 |          7 |        7 | 11716.18 |     0.04
+      17597 | Customer#000017597 |  758599 | 1992-03-05 | 1992-04-05 |          1 |       39 | 38651.34 |     0.10
+      12805 | Customer#000012805 |  116708 | 1992-03-28 | 1992-04-28 |          6 |       19 | 30260.73 |     0.01
+      19798 | Customer#000019798 |  171109 | 1992-04-21 | 1992-05-21 |          2 |       25 | 30257.00 |     0.02
+       8708 | Customer#000008708 |  744229 | 1992-01-18 | 1992-02-18 |          1 |       11 | 12696.64 |     0.05
+      10288 | Customer#000010288 |  134884 | 1992-05-17 | 1992-06-17 |          2 |       36 | 44147.52 |     0.07
+       5356 | Customer#000005356 |  137733 | 1992-04-21 | 1992-05-21 |          6 |       12 | 18499.20 |     0.07
+      18856 | Customer#000018856 |  411239 | 1992-01-22 | 1992-02-22 |          1 |       23 | 43538.08 |     0.08
+      28966 | Customer#000028966 |  445284 | 1992-03-01 | 1992-04-01 |          1 |       28 | 49667.24 |     0.08
+      23701 | Customer#000023701 |  621316 | 1992-04-12 | 1992-05-12 |          1 |       15 | 19835.85 |     0.09
+       8494 | Customer#000008494 |  524994 | 1992-02-28 | 1992-03-28 |          3 |       28 | 44313.92 |     0.02
+       6608 | Customer#000006608 |  546787 | 1992-03-16 | 1992-04-16 |          2 |       40 | 57459.60 |     0.10
+      17317 | Customer#000017317 |   17152 | 1992-03-13 | 1992-04-13 |          5 |       33 | 35479.95 |     0.05
+      24112 | Customer#000024112 |  586112 | 1992-01-23 | 1992-02-23 |          5 |       26 | 27563.90 |     0.01
+      21554 | Customer#000021554 |  449987 | 1992-02-26 | 1992-03-26 |          6 |       33 | 33959.97 |     0.10
+      20944 | Customer#000020944 |  450469 | 1992-03-06 | 1992-04-06 |          3 |        6 |  8859.36 |     0.02
+       1225 | Customer#000001225 |  126086 | 1992-04-04 | 1992-05-04 |          5 |       23 | 34951.03 |     0.06
+      23797 | Customer#000023797 |  436356 | 1992-04-16 | 1992-05-16 |          2 |       43 | 48426.60 |     0.02
+      14432 | Customer#000014432 |  704321 | 1992-04-30 | 1992-05-30 |          2 |       29 | 33007.80 |     0.08
+      25115 | Customer#000025115 |  735043 | 1992-03-26 | 1992-04-26 |          3 |        3 |  4663.92 |     0.04
+       8551 | Customer#000008551 | 1168194 | 1992-03-19 | 1992-04-19 |          2 |       16 | 17650.72 |     0.02
+      18782 | Customer#000018782 |  464871 | 1992-05-04 | 1992-06-04 |          6 |       32 | 45776.00 |     0.05
+       8501 | Customer#000008501 |  780449 | 1992-04-02 | 1992-05-02 |          6 |        7 | 11232.69 |     0.10
+      18460 | Customer#000018460 |  803463 | 1992-03-29 | 1992-04-29 |          7 |       20 | 27389.20 |     0.04
+       6377 | Customer#000006377 |  808935 | 1992-04-22 | 1992-05-22 |          3 |       49 | 93687.02 |     0.08
+      16082 | Customer#000016082 |  839943 | 1992-05-29 | 1992-06-29 |          3 |        9 |  8667.27 |     0.00
+       6176 | Customer#000006176 |   20615 | 1992-04-16 | 1992-05-16 |          4 |       40 | 71714.40 |     0.03
+       7684 | Customer#000007684 |   21510 | 1992-05-09 | 1992-06-09 |          2 |       46 | 81136.64 |     0.00
+      18815 | Customer#000018815 |   22754 | 1992-04-26 | 1992-05-26 |          1 |       12 | 14535.60 |     0.08
+      23191 | Customer#000023191 |   24291 | 1992-04-25 | 1992-05-25 |          2 |        6 |  6895.44 |     0.10
+      10288 | Customer#000010288 |  518305 | 1992-02-14 | 1992-03-14 |          5 |       28 | 44286.76 |     0.01
+      28379 | Customer#000028379 |  156480 | 1992-06-01 | 1992-07-01 |          6 |        9 | 16955.64 |     0.07
+       3452 | Customer#000003452 |  162433 | 1992-04-07 | 1992-05-07 |          7 |       22 | 25062.40 |     0.04
+       1265 | Customer#000001265 |  182306 | 1992-04-23 | 1992-05-23 |          2 |       28 | 47397.84 |     0.10
+       6325 | Customer#000006325 |  192098 | 1992-05-25 | 1992-06-25 |          5 |       49 | 45962.98 |     0.03
+      13208 | Customer#000013208 |  725381 | 1992-05-05 | 1992-06-05 |          4 |       27 | 31299.21 |     0.02
+      23491 | Customer#000023491 |  128451 | 1992-05-05 | 1992-06-05 |          7 |       47 | 64598.68 |     0.04
+Time: 4050.211 ms
+
+-- ### Query 4: Retrieve Comprehensive Customer Order and Line Item Details
+-- from star
+demo=# select 
+demo-#     c.c_custkey, 
+demo-#     c.c_name,
+demo-#     o.o_orderkey,
+demo-#     o.o_orderdate,
+demo-#     l.l_shipdate,
+demo-#     l.l_linenumber,
+demo-#     l.l_quantity,
+demo-#     l.l_extendedprice,
+demo-#     l.l_discount
+demo-# from customer c, orders o, lineitem l
+demo-# where 
+demo-#     c.c_custkey = o.o_custkey and o.o_orderkey = l.l_orderkey;
+ c_custkey |       c_name       | o_orderkey | o_orderdate | l_shipdate | l_linenumber | l_quantity | l_extendedprice | l_discount 
+-----------+--------------------+------------+-------------+------------+--------------+------------+-----------------+------------
+     14690 | Customer#000014690 |       1185 | 1992-08-24  | 1992-12-05 |            1 |       8.00 |        10395.04 |       0.01
+     29204 | Customer#000029204 |       1506 | 1992-09-21  | 1992-12-02 |            6 |      38.00 |        69156.58 |       0.05
+     16180 | Customer#000016180 |       3232 | 1992-10-09  | 1992-11-30 |            1 |      22.00 |        34026.08 |       0.10
+     16180 | Customer#000016180 |       3232 | 1992-10-09  | 1992-12-14 |            3 |       3.00 |         2946.12 |       0.04
+     16867 | Customer#000016867 |       3776 | 1992-11-20  | 1992-12-03 |            3 |      49.00 |        55232.31 |       0.01
+     20405 | Customer#000020405 |       5571 | 1992-12-19  | 1992-12-25 |            1 |      32.00 |        51894.08 |       0.05
+      5323 | Customer#000005323 |       5954 | 1992-12-03  | 1992-12-25 |            3 |      20.00 |        31933.40 |       0.09
+     17716 | Customer#000017716 |       6150 | 1992-10-02  | 1992-11-26 |            6 |      14.00 |        22984.08 |       0.02
+      9587 | Customer#000009587 |      11874 | 1992-09-10  | 1992-12-25 |            7 |      32.00 |        42797.12 |       0.08
+     20611 | Customer#000020611 |      15715 | 1992-10-16  | 1992-12-25 |            5 |      44.00 |        69284.16 |       0.04
+      6868 | Customer#000006868 |      17157 | 1992-09-20  | 1992-12-15 |            2 |      40.00 |        40723.20 |       0.02
+      8764 | Customer#000008764 |      17700 | 1992-10-28  | 1992-12-04 |            6 |      31.00 |        46734.67 |       0.02
+     22730 | Customer#000022730 |      17831 | 1992-10-26  | 1992-11-28 |            4 |      18.00 |        18415.98 |       0.04
+      6074 | Customer#000006074 |      20579 | 1992-10-02  | 1992-12-25 |            3 |       5.00 |         8804.10 |       0.00
+     22822 | Customer#000022822 |      23649 | 1992-09-06  | 1992-12-22 |            5 |      41.00 |        39772.46 |       0.10
+     28996 | Customer#000028996 |      23776 | 1992-08-09  | 1992-12-06 |            2 |      39.00 |        42868.02 |       0.02
+     26242 | Customer#000026242 |      23812 | 1992-07-28  | 1992-11-26 |            3 |      19.00 |        21321.61 |       0.01
+     16727 | Customer#000016727 |      26753 | 1992-10-15  | 1992-12-19 |            2 |      24.00 |        37888.08 |       0.09
+     24211 | Customer#000024211 |      30562 | 1992-11-02  | 1992-12-05 |            1 |       2.00 |         2654.82 |       0.04
+     25307 | Customer#000025307 |      31302 | 1992-08-02  | 1992-12-01 |            5 |      25.00 |        39390.75 |       0.00
+      7717 | Customer#000007717 |      31744 | 1992-09-10  | 1992-12-23 |            5 |      49.00 |        71860.95 |       0.05
+     23359 | Customer#000023359 |      32231 | 1992-11-02  | 1992-12-15 |            7 |      43.00 |        42141.72 |       0.07
+     12202 | Customer#000012202 |      33031 | 1992-08-25  | 1992-12-12 |            4 |      22.00 |        31493.44 |       0.02
+     14368 | Customer#000014368 |      33761 | 1992-08-05  | 1992-12-01 |            3 |      23.00 |        34121.88 |       0.10
+      4141 | Customer#000004141 |      34560 | 1992-11-04  | 1992-12-11 |            1 |      29.00 |        27724.58 |       0.02
+     15424 | Customer#000015424 |      34627 | 1992-10-04  | 1992-11-28 |            1 |      35.00 |        50172.50 |       0.07
+     15424 | Customer#000015424 |      34627 | 1992-10-04  | 1992-12-06 |            2 |      15.00 |        22073.25 |       0.02
+       880 | Customer#000000880 |      34659 | 1992-11-20  | 1992-11-28 |            3 |      19.00 |        18982.52 |       0.10
+      6826 | Customer#000006826 |      37158 | 1992-09-23  | 1992-12-06 |            6 |      50.00 |        81736.50 |       0.00
+      7369 | Customer#000007369 |      39045 | 1992-09-15  | 1992-12-15 |            6 |      23.00 |        31082.66 |       0.03
+     22963 | Customer#000022963 |      39142 | 1992-10-31  | 1992-12-07 |            1 |      19.00 |        22310.56 |       0.05
+     26396 | Customer#000026396 |      40167 | 1992-09-19  | 1992-12-12 |            5 |      18.00 |        29785.50 |       0.02
+     24577 | Customer#000024577 |      40645 | 1992-12-11  | 1992-12-18 |            1 |      16.00 |        20982.40 |       0.01
+     13273 | Customer#000013273 |      41378 | 1992-10-30  | 1992-11-26 |            1 |       7.00 |         7540.05 |       0.02
+       247 | Customer#000000247 |      42054 | 1992-09-15  | 1992-12-06 |            3 |       2.00 |         3303.46 |       0.01
+     18712 | Customer#000018712 |      42469 | 1992-11-09  | 1992-12-24 |            4 |      11.00 |        10032.00 |       0.04
+      1787 | Customer#000001787 |      42501 | 1992-11-14  | 1992-12-15 |            3 |      12.00 |        22235.28 |       0.08
+      1787 | Customer#000001787 |      42501 | 1992-11-14  | 1992-12-25 |            7 |      42.00 |        44189.04 |       0.09
+      9518 | Customer#000009518 |      42688 | 1992-08-01  | 1992-11-30 |            1 |      48.00 |        72315.84 |       0.07
+      2980 | Customer#000002980 |      43270 | 1992-09-02  | 1992-12-09 |            2 |      10.00 |        14825.40 |       0.09
+      1222 | Customer#000001222 |      43332 | 1992-09-11  | 1992-11-26 |            2 |      18.00 |        17659.08 |       0.05
+      7069 | Customer#000007069 |      44323 | 1992-08-08  | 1992-12-02 |            1 |       9.00 |        11784.33 |       0.02
+      5444 | Customer#000005444 |      45504 | 1992-09-12  | 1992-11-27 |            6 |       9.00 |        13811.31 |       0.08
+     16792 | Customer#000016792 |      45571 | 1992-09-24  | 1992-11-29 |            5 |      35.00 |        49857.85 |       0.10
+       814 | Customer#000000814 |      48643 | 1992-10-19  | 1992-12-12 |            2 |      25.00 |        27879.25 |       0.06
+      6346 | Customer#000006346 |      50055 | 1992-10-19  | 1992-12-21 |            4 |      15.00 |        17208.45 |       0.10
+     17371 | Customer#000017371 |      51107 | 1992-09-26  | 1992-12-06 |            1 |      46.00 |        68934.68 |       0.01
+     17371 | Customer#000017371 |      51107 | 1992-09-26  | 1992-12-13 |            2 |      30.00 |        51143.10 |       0.01
+     18145 | Customer#000018145 |      52772 | 1992-11-06  | 1992-12-24 |            2 |      42.00 |        70087.92 |       0.02
+      9212 | Customer#000009212 |      53505 | 1992-10-09  | 1992-12-24 |            1 |      28.00 |        37054.92 |       0.10
+      9212 | Customer#000009212 |      53505 | 1992-10-09  | 1992-11-26 |            2 |      49.00 |        85691.69 |       0.07
+      4721 | Customer#000004721 |      54086 | 1992-09-07  | 1992-12-08 |            4 |      37.00 |        39372.44 |       0.09
+Time: 1349.259 ms
+
+-- Результат: 
+-- datavault медленее в 3 раза
+-- datavault: sc - hc - lco - ho - lol - hl - sl
+--                             |
+--                            so
+-- схема сложнее, чем в прошлых запросах (2 линка и 3 сателлита)
+-- star: обращение к 3-м таблицам, связь по двум парам ключей
+
+-- Выполнение запросов query5
+-- ### Query 5: Retrieve All Parts Supplied by a Specific Supplier with Supplier Details
+-- from datavault
+demo=# SELECT 
+demo-#     hs.SupplierID,
+demo-#     ss.SupplierName,
+demo-#     hp.PartID,
+demo-#     sp.PartName,
+demo-#     sp.PartDescription,
+demo-#     sp.PartPrice
+demo-# FROM 
+demo-#     Hub_Supplier hs
+demo-# JOIN 
+demo-#     Link_Supplier_Part lsp ON hs.Supplier_HashKey = lsp.Supplier_HashKey
+demo-# JOIN 
+demo-#     Hub_Part hp ON lsp.Part_HashKey = hp.Part_HashKey
+demo-# JOIN 
+demo-#     Satellite_Supplier ss ON hs.Supplier_HashKey = ss.Supplier_HashKey
+demo-# JOIN 
+demo-#     Satellite_Part sp ON hp.Part_HashKey = sp.Part_HashKey
+demo-# WHERE 
+demo-#     hs.SupplierID = 470 -- Replace 123 with the actual SupplierID
+demo-# AND 
+demo-#     ss.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Supplier WHERE Supplier_HashKey = hs.Supplier_HashKey)
+demo-# AND 
+demo-#     sp.LoadDate = (SELECT MAX(LoadDate) FROM Satellite_Part WHERE Part_HashKey = hp.Part_HashKey);
+ supplierid |    suppliername    | partid |                  partname                   | partdescription | partprice 
+------------+--------------------+--------+---------------------------------------------+-----------------+-----------
+        470 | Supplier#000000470 |  37433 | seashell firebrick dark floral magenta      | Manufacturer#4  |   1370.43
+        470 | Supplier#000000470 |  39950 | violet cream ivory white burlywood          | Manufacturer#4  |   1889.95
+        470 | Supplier#000000470 |  32921 | deep saddle mint salmon magenta             | Manufacturer#1  |   1853.92
+        470 | Supplier#000000470 |  36469 | goldenrod navy red tomato white             | Manufacturer#1  |   1405.46
+        470 | Supplier#000000470 |  27956 | sky sandy mint saddle peach                 | Manufacturer#5  |   1883.95
+        470 | Supplier#000000470 |  27443 | misty pale brown olive cyan                 | Manufacturer#3  |   1370.44
+        470 | Supplier#000000470 |  24469 | smoke peru pale deep misty                  | Manufacturer#1  |   1393.46
+        470 | Supplier#000000470 |  26469 | aquamarine almond rose mint firebrick       | Manufacturer#5  |   1395.46
+        470 | Supplier#000000470 |  22936 | brown turquoise slate dim blush             | Manufacturer#1  |   1858.93
+        470 | Supplier#000000470 |  21959 | metallic cornsilk deep rose wheat           | Manufacturer#2  |   1880.95
+        470 | Supplier#000000470 |  20939 | cornflower dark lace cream blush            | Manufacturer#4  |   1859.93
+        470 | Supplier#000000470 |  22469 | dim powder blue sky papaya                  | Manufacturer#2  |   1391.46
+        470 | Supplier#000000470 |  15962 | royal moccasin lace wheat cornflower        | Manufacturer#1  |   1877.96
+        470 | Supplier#000000470 |  13963 | black slate chiffon cream moccasin          | Manufacturer#3  |   1876.96
+        470 | Supplier#000000470 |  12951 | chartreuse medium peru slate lemon          | Manufacturer#5  |   1863.95
+        470 | Supplier#000000470 |  13457 | bisque slate royal blanched chiffon         | Manufacturer#5  |   1370.45
+        470 | Supplier#000000470 |  16469 | powder misty pale maroon wheat              | Manufacturer#1  |   1385.46
+        470 | Supplier#000000470 |  12469 | hot khaki sienna linen almond               | Manufacturer#4  |   1381.46
+        470 | Supplier#000000470 |  10954 | ivory cyan dim goldenrod midnight           | Manufacturer#2  |   1864.95
+        470 | Supplier#000000470 |  14948 | seashell lace blanched blue khaki           | Manufacturer#3  |   1862.94
+        470 | Supplier#000000470 |  11459 | burlywood yellow wheat beige tomato         | Manufacturer#2  |   1370.45
+        470 | Supplier#000000470 |   8469 | seashell snow linen chiffon burnished       | Manufacturer#3  |   1377.46
+        470 | Supplier#000000470 |   6960 | antique orchid dim linen peru               | Manufacturer#5  |   1866.96
+        470 | Supplier#000000470 |   3467 | beige burnished medium firebrick bisque     | Manufacturer#4  |   1370.46
+        470 | Supplier#000000470 |    469 | burlywood dark steel sky blue               | Manufacturer#1  |   1369.46
+        470 | Supplier#000000470 |   4469 | peru frosted indian blue forest             | Manufacturer#5  |   1373.46
+        470 | Supplier#000000470 |   1469 | violet spring aquamarine cream sky          | Manufacturer#3  |   1370.46
+        470 | Supplier#000000470 |  38469 | rosy azure ghost sienna floral              | Manufacturer#4  |   1407.46
+        470 | Supplier#000000470 |  33953 | aquamarine turquoise deep steel navajo      | Manufacturer#5  |   1886.95
+        470 | Supplier#000000470 |  35435 | cyan salmon white light snow                | Manufacturer#5  |   1370.43
+        470 | Supplier#000000470 |  34918 | orange midnight frosted dark rosy           | Manufacturer#2  |   1852.91
+        470 | Supplier#000000470 |  31954 | coral green olive ivory pink                | Manufacturer#1  |   1885.95
+        470 | Supplier#000000470 |  29441 | burnished forest cornsilk light ivory       | Manufacturer#1  |   1370.44
+        470 | Supplier#000000470 |  28469 | medium sandy misty pale orange              | Manufacturer#4  |   1397.46
+        470 | Supplier#000000470 |  29955 | light snow metallic gainsboro medium        | Manufacturer#2  |   1884.95
+        470 | Supplier#000000470 |  23447 | slate salmon metallic indian purple         | Manufacturer#5  |   1370.44
+        470 | Supplier#000000470 |  17961 | chocolate aquamarine beige almond wheat     | Manufacturer#2  |   1878.96
+        470 | Supplier#000000470 |  19451 | metallic navy plum dim drab                 | Manufacturer#5  |   1370.45
+        470 | Supplier#000000470 |  15455 | salmon beige honeydew azure magenta         | Manufacturer#2  |   1370.45
+        470 | Supplier#000000470 |  14469 | orange blue white pink burnished            | Manufacturer#4  |   1383.46
+        470 | Supplier#000000470 |  10469 | cream grey brown pink spring                | Manufacturer#5  |   1379.46
+        470 | Supplier#000000470 |   9965 | violet purple puff green peru               | Manufacturer#2  |   1874.96
+        470 | Supplier#000000470 |   6469 | turquoise navajo indian olive forest        | Manufacturer#1  |   1375.46
+        470 | Supplier#000000470 |   2966 | orchid dodger turquoise puff tomato         | Manufacturer#1  |   1868.96
+        470 | Supplier#000000470 |   2469 | lavender aquamarine chiffon dark antique    | Manufacturer#1  |   1371.46
+        470 | Supplier#000000470 |   1969 | orchid navy bisque powder olive             | Manufacturer#3  |   1870.96
+        470 | Supplier#000000470 |    969 | hot azure royal red dark                    | Manufacturer#5  |   1869.96
+        470 | Supplier#000000470 |  39431 | medium drab thistle frosted peach           | Manufacturer#1  |   1370.43
+        470 | Supplier#000000470 |  37951 | sandy almond grey sienna moccasin           | Manufacturer#3  |   1888.95
+        470 | Supplier#000000470 |  35952 | red white ghost rosy navajo                 | Manufacturer#1  |   1887.95
+        470 | Supplier#000000470 |  34469 | floral red pink almond saddle               | Manufacturer#3  |   1403.46
+        470 | Supplier#000000470 |  38912 | violet deep dodger lemon green              | Manufacturer#4  |   1850.91
+Time: 233.174 ms
+
+-- ### Query 5: Retrieve All Parts Supplied by a Specific Supplier with Supplier Details
+-- from star
+demo=# select 
+demo-#     s.s_suppkey,
+demo-#     s.s_name,
+demo-#     p.p_partkey,
+demo-#     p.p_name,
+demo-#     p.p_mfgr,
+demo-#     p.p_retailprice
+demo-# from supplier s, part p, partsupp ps
+demo-#     where s.s_suppkey = ps.ps_suppkey and ps.ps_partkey = p.p_partkey
+demo-#     and s.s_suppkey = 470;
+ s_suppkey |          s_name           | p_partkey |                   p_name                    |          p_mfgr           | p_retailprice 
+-----------+---------------------------+-----------+---------------------------------------------+---------------------------+---------------
+       470 | Supplier#000000470        |       969 | hot azure royal red dark                    | Manufacturer#5            |       1869.96
+       470 | Supplier#000000470        |      3467 | beige burnished medium firebrick bisque     | Manufacturer#4            |       1370.46
+       470 | Supplier#000000470        |      3968 | peru dark khaki dodger indian               | Manufacturer#4            |       1871.96
+       470 | Supplier#000000470        |      4963 | hot chiffon steel magenta drab              | Manufacturer#1            |       1867.96
+       470 | Supplier#000000470        |      8957 | orange dodger beige purple turquoise        | Manufacturer#2            |       1865.95
+       470 | Supplier#000000470        |     10954 | ivory cyan dim goldenrod midnight           | Manufacturer#2            |       1864.95
+       470 | Supplier#000000470        |     17453 | sky spring plum lemon lavender              | Manufacturer#2            |       1370.45
+       470 | Supplier#000000470        |     17961 | chocolate aquamarine beige almond wheat     | Manufacturer#2            |       1878.96
+       470 | Supplier#000000470        |     18942 | tomato green coral forest burlywood         | Manufacturer#3            |       1860.94
+       470 | Supplier#000000470        |     20939 | cornflower dark lace cream blush            | Manufacturer#4            |       1859.93
+       470 | Supplier#000000470        |     25445 | pink smoke pale salmon moccasin             | Manufacturer#3            |       1370.44
+       470 | Supplier#000000470        |     25957 | firebrick medium lavender gainsboro azure   | Manufacturer#3            |       1882.95
+       470 | Supplier#000000470        |     26930 | navajo almond dark snow ivory               | Manufacturer#5            |       1856.93
+       470 | Supplier#000000470        |     29955 | light snow metallic gainsboro medium        | Manufacturer#2            |       1884.95
+       470 | Supplier#000000470        |     30924 | blanched ghost chiffon plum ivory           | Manufacturer#2            |       1854.92
+       470 | Supplier#000000470        |     31954 | coral green olive ivory pink                | Manufacturer#1            |       1885.95
+       470 | Supplier#000000470        |     39950 | violet cream ivory white burlywood          | Manufacturer#4            |       1889.95
+       470 | Supplier#000000470        |       469 | burlywood dark steel sky blue               | Manufacturer#1            |       1369.46
+       470 | Supplier#000000470        |      2966 | orchid dodger turquoise puff tomato         | Manufacturer#1            |       1868.96
+       470 | Supplier#000000470        |      5967 | sky cream coral powder maroon               | Manufacturer#3            |       1872.96
+       470 | Supplier#000000470        |      6960 | antique orchid dim linen peru               | Manufacturer#5            |       1866.96
+       470 | Supplier#000000470        |      7463 | lawn steel chiffon mint light               | Manufacturer#3            |       1370.46
+       470 | Supplier#000000470        |      7966 | goldenrod rosy lace yellow hot              | Manufacturer#3            |       1873.96
+       470 | Supplier#000000470        |      9965 | violet purple puff green peru               | Manufacturer#2            |       1874.96
+       470 | Supplier#000000470        |     12951 | chartreuse medium peru slate lemon          | Manufacturer#5            |       1863.95
+       470 | Supplier#000000470        |     13963 | black slate chiffon cream moccasin          | Manufacturer#3            |       1876.96
+       470 | Supplier#000000470        |     14469 | orange blue white pink burnished            | Manufacturer#4            |       1383.46
+       470 | Supplier#000000470        |     15962 | royal moccasin lace wheat cornflower        | Manufacturer#1            |       1877.96
+       470 | Supplier#000000470        |     18469 | seashell bisque sienna chiffon coral        | Manufacturer#4            |       1387.46
+       470 | Supplier#000000470        |     21449 | azure violet chartreuse slate spring        | Manufacturer#1            |       1370.44
+       470 | Supplier#000000470        |     27443 | misty pale brown olive cyan                 | Manufacturer#3            |       1370.44
+       470 | Supplier#000000470        |     27956 | sky sandy mint saddle peach                 | Manufacturer#5            |       1883.95
+       470 | Supplier#000000470        |     31439 | chiffon salmon chocolate light violet       | Manufacturer#5            |       1370.43
+       470 | Supplier#000000470        |     32921 | deep saddle mint salmon magenta             | Manufacturer#1            |       1853.92
+       470 | Supplier#000000470        |     33953 | aquamarine turquoise deep steel navajo      | Manufacturer#5            |       1886.95
+       470 | Supplier#000000470        |     34469 | floral red pink almond saddle               | Manufacturer#3            |       1403.46
+       470 | Supplier#000000470        |     37433 | seashell firebrick dark floral magenta      | Manufacturer#4            |       1370.43
+       470 | Supplier#000000470        |      6469 | turquoise navajo indian olive forest        | Manufacturer#1            |       1375.46
+       470 | Supplier#000000470        |      8469 | seashell snow linen chiffon burnished       | Manufacturer#3            |       1377.46
+       470 | Supplier#000000470        |      9461 | deep light violet brown chiffon             | Manufacturer#5            |       1370.46
+       470 | Supplier#000000470        |     11459 | burlywood yellow wheat beige tomato         | Manufacturer#2            |       1370.45
+       470 | Supplier#000000470        |     12469 | hot khaki sienna linen almond               | Manufacturer#4            |       1381.46
+       470 | Supplier#000000470        |     13457 | bisque slate royal blanched chiffon         | Manufacturer#5            |       1370.45
+       470 | Supplier#000000470        |     15455 | salmon beige honeydew azure magenta         | Manufacturer#2            |       1370.45
+       470 | Supplier#000000470        |     16945 | turquoise seashell bisque sienna cornflower | Manufacturer#3            |       1861.94
+       470 | Supplier#000000470        |     20469 | royal metallic hot moccasin tomato          | Manufacturer#3            |       1389.46
+       470 | Supplier#000000470        |     21959 | metallic cornsilk deep rose wheat           | Manufacturer#2            |       1880.95
+       470 | Supplier#000000470        |     22936 | brown turquoise slate dim blush             | Manufacturer#1            |       1858.93
+       470 | Supplier#000000470        |     23447 | slate salmon metallic indian purple         | Manufacturer#5            |       1370.44
+       470 | Supplier#000000470        |     24469 | smoke peru pale deep misty                  | Manufacturer#1            |       1393.46
+       470 | Supplier#000000470        |     28469 | medium sandy misty pale orange              | Manufacturer#4            |       1397.46
+       470 | Supplier#000000470        |     29441 | burnished forest cornsilk light ivory       | Manufacturer#1            |       1370.44
+Time: 104.563 ms
+
+-- Результат:
+-- datavault в 2 раза медленее
+-- datavault: ss - hs - lsp - hp - sp
+-- start: запрос к друм таблицам по одной паре ключей
+
+
+/* Выводы
+
+Datavault может быть производительней в случае обращения к 3 и более таблиц.
+Тогда схема связей через линк таблицы может быть оправдана.
+При обращении к данным из join'а двух таблиц во всех запросах лучше себя показала звезда.
+
+*/
