@@ -3,8 +3,8 @@
 #include <string>
 #include <cstring>
 
-#define MAX_WORDS 100  // Максимальное количество слов в файле key.txt
-#define MAX_PLAINTEXT_LENGTH 1024  // Максимальная длина строки в файле text.txt
+#define MAX_KEYS 100  // Максимальное количество слов в файле key.txt
+#define MAX_PLAINTEXT_LENGTH 1024  // Максимальное кол-во символов в файле text.txt
 
 // Функция для расчета шага шифрования на основе слова
 int calculateStep(char* word) {
@@ -47,30 +47,55 @@ int main() {
         return 1;
     }
     char plaintext[MAX_PLAINTEXT_LENGTH];
-    textFile.getline(plaintext, MAX_PLAINTEXT_LENGTH);
+    textFile.read(plaintext, MAX_PLAINTEXT_LENGTH);
     textFile.close();
 
+    std::cout << "исходный текст:" << std::endl << plaintext << std::endl; 
+
     // Чтение ключей из файла key.txt
+    const int maxWordLength = 50; // Максимальная длина одного слова
+    char buffer[maxWordLength]; // Буфер для временного хранения слов
+    char keys[MAX_KEYS][maxWordLength]; // Массив для хранения всех слов
+    int numKeys = 0; // Количество слов в массиве
+
     std::ifstream keyFile("key.txt");
     if (!keyFile.is_open()) {
-        std::cerr << "Ошибка открытия файла key.txt" << std::endl;
+        std::cout << "Ошибка открытия файла key.txt" << std::endl;
         return 1;
     }
-    char words[MAX_WORDS][MAX_PLAINTEXT_LENGTH];
-    int numWords = 0;
-    while (keyFile.getline(words[numWords], MAX_PLAINTEXT_LENGTH)) {
-        numWords++;
+
+    keyFile.read(buffer, sizeof(buffer)); // Чтение блока данных
+    int length = strlen(buffer); // Длина прочитанного блока
+    int start = 0; // Начальная позиция слова в блоке
+    for (int i = 0; i <= length; ++i) {
+        if (buffer[i] == ' ' or buffer[i] == '\n' or buffer[i] == '\0') { // Найдено слово
+            strncpy(keys[numKeys], &buffer[start], i - start); // Копируем слово в массив
+            start = i + 1; // Сдвигаем начальную позицию к следующему слову
+            ++numKeys; // Увеличиваем счётчик слов
+        }
     }
+    
+    memset(buffer, 0, sizeof(buffer)); // Очищаем буфер
     keyFile.close();
 
+    std::cout << "Список слов для ключей:" << std::endl;
+    for (int i = 0; i < numKeys; ++i) {
+        std::cout << keys[i] << std::endl;
+    }
+
     // Расчет шагов шифрования
-    int steps[MAX_WORDS];
-    for (int i = 0; i < numWords; i++) {
-        steps[i] = calculateStep(words[i]);
+    int steps[MAX_KEYS];
+    for (int i = 0; i < numKeys; i++) {
+        steps[i] = calculateStep(keys[i]);
+    }
+
+    std::cout << "Список ключей:" << std::endl;
+    for (int i = 0; i < numKeys; ++i) {
+        std::cout << steps[i] << std::endl;
     }
 
     // Шифрование строки
-    encryptString(plaintext, steps, numWords);
+    encryptString(plaintext, steps, numKeys);
 
     // Запись зашифрованной строки в файл encode.txt
     std::ofstream encodeFile("encode.txt");
@@ -90,11 +115,13 @@ int main() {
         return 1;
     }
     char ciphertext[MAX_PLAINTEXT_LENGTH];
-    inputFile.getline(ciphertext, MAX_PLAINTEXT_LENGTH);
+    inputFile.read(ciphertext, MAX_PLAINTEXT_LENGTH);
     inputFile.close();
 
+    std::cout << ciphertext << std::endl;
+
     // Расшифровка строки
-    decryptString(ciphertext, steps, numWords);
+    decryptString(ciphertext, steps, numKeys);
 
     // Запись расшифрованной строки в файл decode.txt
     std::ofstream decodeFile("decode.txt");
@@ -106,6 +133,8 @@ int main() {
     decodeFile.close();
 
     std::cout << "Расшифровка завершена. Результат сохранён в файл decode.txt" << std::endl;
+
+    std::cout  << ciphertext << std::endl;
 
     return 0;
 }
