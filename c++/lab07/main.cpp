@@ -98,12 +98,16 @@ int main() {
     encryptString(plaintext, steps, numKeys);
 
     // Запись зашифрованной строки в файл encode.txt
-    std::ofstream encodeFile("encode.txt");
+    std::ofstream encodeFile("encode.txt", std::ios::binary);
     if (!encodeFile.is_open()) {
         std::cerr << "Ошибка открытия файла encode.txt" << std::endl;
         return 1;
     }
-    encodeFile << plaintext;
+
+//    for (int i = 0; strlen(plaintext); i++) {
+//        encodeFile << plaintext[i];
+    encodeFile.write(plaintext, strlen(plaintext));
+//    }
     encodeFile.close();
 
     std::cout << "Шифровка завершена. Результат сохранён в файл encode.txt" << std::endl;

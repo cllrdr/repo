@@ -1,0 +1,11 @@
+{
+    "model": "GigaChat",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Готов поработать?"
+      }
+    ],
+    "stream": false,
+    "repetition_penalty": 1
+}
