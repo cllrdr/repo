@@ -1,7 +1,7 @@
 #!/bin/bash
 
 topic_number=$1;
-for i in {1..15}; do
+for i in {1,3}; do
     # Создаем временный файл для хранения текста промпта
     touch topic
     yq .items[].slide$i.prompt plans/list$topic_number.yml | grep -v null > topic
