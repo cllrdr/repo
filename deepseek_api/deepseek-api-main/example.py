@@ -1,7 +1,7 @@
 from dsk.api import DeepSeekAPI, AuthenticationError, RateLimitError, NetworkError, APIError
 import sys, os
 from typing import Generator, Dict, Any
-from dotenv import load_dotenv
+from dotenv import load_dotenv # type: ignore
 
 load_dotenv()
 
