@@ -19,6 +19,8 @@ public:
     bool getIsLifePossible() const { return isLifePossible; }
     int getNumberOfSatellites() const { return numberOfSatellites; }
 
+    void setD() { diameter = 30; }
+
     // Метод для вывода информации о планете
     void printInfo() {
         std::cout << "Название: " << name << std::endl;

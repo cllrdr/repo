@@ -30,24 +30,23 @@ public:
             if (tokens.size() != 4) {
                 continue; // Пропускаем некорректные строки
             }
-
+            std::string name = tokens[0];
+            
             try {
-                // Извлекаем данные из токенов
-                std::string name = tokens[0];
-                double diameter = std::stod(tokens[1]);
-                bool isLifePossible = std::stoi(tokens[2]) != 0;
-                int numberOfSatellites = std::stoi(tokens[3]);
-
-                // Создаем и добавляем планету в вектор
-                Planet p(name, diameter, isLifePossible, numberOfSatellites);
+                Planet p(
+                    name, 
+                    std::stod(tokens[1]), 
+                    std::stoi(tokens[2]) != 0, 
+                    std::stoi(tokens[3])
+                );
                 planets.addPlanet(p);
             } catch (const std::exception& e) {
                 // Пропускаем строки с некорректными данными
                 continue;
-            }
+             }
+            // Создаем и добавляем планету в вектор
+            
 
-        }
-        return planets;    
-    } 
-
+        } return planets;    
+    }
 };

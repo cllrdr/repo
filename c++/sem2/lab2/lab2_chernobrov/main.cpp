@@ -21,13 +21,15 @@ int main() {
     planetArray.printAllPlanets();
 
     // Поиск планеты по названию
-    std::string planetName = "Марс";
+    std::string planetName = "Saturn";
     Planet* foundPlanet = planetArray.findPlanet(planetName);
     if (foundPlanet) {
         std::cout << "Планета найдена: " << foundPlanet->getName() << std::endl;
     } else {
         std::cout << "Планета не найдена." << std::endl;
     }
+
+    foundPlanet->setD();
 
     // Удаление планеты по названию
     std::string planetToRemove = "Mars";
