@@ -1,9 +1,0 @@
-SELECT department_name
-FROM departments d
-WHERE NOT EXISTS (
-    SELECT employee_name
-    FROM employees e
-    WHERE UPPER(e.employee_name) LIKE '%Z%' 
-    AND UPPER(e.employee_name) LIKE '%W%'
-    AND d.department_id = e.department_id
-);

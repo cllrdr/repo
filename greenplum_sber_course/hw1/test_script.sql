@@ -1,1 +1,0 @@
-select * from public.customers limit 10
