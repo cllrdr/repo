@@ -11,7 +11,7 @@ with open('topic', 'r') as topic:
     topic = topic.readline().strip()
 
 #prompt = "Ты готов поработать?"
-prompt = f"Напиши текст для слайда на тему: {topic}"
+prompt = f"В рамках курсовой работы об истории управления персоналом в России 18-19 веков. Напиши текст размером примерно 0.7 А4 на тему: {topic}. Пиши как студентка первокурсница"
 
 # Формирование запроса
 url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
@@ -27,7 +27,8 @@ data = {
             "role": "user",
             "content": f"{prompt}"
         }
-    ]
+    ],
+    "creativity": 0.8
 }
 
 # Отправка запроса

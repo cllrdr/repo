@@ -8,4 +8,4 @@ for i in {1,3}; do
     echo "Слайд "$i
     python3 api_query.py
     rm topic
-done > /home/aach/repo/sociology/topic_$topic_number
+done > /home/aach/repo/diana/topic_$topic_number
