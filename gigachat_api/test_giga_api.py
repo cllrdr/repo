@@ -1,17 +1,13 @@
 import requests
+from dotenv import load_dotenv
+import os
 
-# Чтение содержимого текстового файла
-#with open('source.txt', 'r') as file:
-#    file_content = file.read()
-
-with open('current_token', 'r') as token:
-    token = token.readline().strip()
-
-with open('topic', 'r') as topic:
-    topic = topic.readline().strip()
-
-#prompt = "Ты готов поработать?"
-prompt = f"В рамках курсовой работы о совершенствовании технологий подбора персонала. Напиши текст размером примерно 0.5 А4 на тему: {topic}. Пиши как студентка второкурсница"
+load_dotenv()
+token = os.getenv("GIGACHAT_TOKEN")
+print(token)
+print("XXXXXXX")
+prompt = "Ты готов поработать?"
+#prompt = f"В рамках курсовой работы о совершенствовании технологий подбора персонала. Напиши текст размером примерно 0.5 А4 на тему: {topic}. Пиши как студентка второкурсница"
 
 # Формирование запроса
 url = "https://gigachat.devices.sberbank.ru/api/v1/chat/completions"
@@ -36,7 +32,7 @@ response = requests.post(url, headers=headers, json=data)
 
 if response.status_code == 200:
     result = response.json()
-    print('===== ТЕМА ====== ' + topic)
+    print('===== ТЕМА ====== ')
     print()
     print(result['choices'][0]['message']['content'])
     print()
